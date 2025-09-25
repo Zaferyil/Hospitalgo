@@ -568,150 +568,228 @@ const UltraModernHospitalApp = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative overflow-auto">
+      {/* PWA Installer */}
+      <PWAInstaller />
+      
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-pink-400 to-red-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
-        <div className="absolute top-40 left-1/2 w-80 h-80 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-500"></div>
+        <div className="absolute -top-40 -right-40 w-60 md:w-80 h-60 md:h-80 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-60 md:w-80 h-60 md:h-80 bg-gradient-to-r from-pink-400 to-red-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
+        <div className="absolute top-40 left-1/2 w-60 md:w-80 h-60 md:h-80 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-500"></div>
       </div>
 
       {/* Glassmorphism Navigation */}
       <nav className="backdrop-blur-xl bg-white/10 border-b border-white/20 sticky top-0 z-40 shadow-2xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 rounded-2xl shadow-2xl animate-pulse">
-                <Package className="h-8 w-8 text-white" />
+        <div className="max-w-7xl mx-auto px-3 md:px-4 lg:px-8">
+          <div className="flex justify-between items-center h-16 md:h-20">
+            <div className="flex items-center space-x-2 md:space-x-4">
+              <div className="p-2 md:p-3 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 rounded-xl md:rounded-2xl shadow-2xl animate-pulse">
+                <Package className="h-5 md:h-8 w-5 md:w-8 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-black bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                <h1 className="text-lg md:text-2xl font-black bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                   🚀 HospitalGo
                 </h1>
-                <p className="text-white/80 font-medium">Smart Hospital Solutions</p>
+                <p className="text-white/80 font-medium text-xs md:text-base hidden sm:block">Smart Hospital Solutions</p>
               </div>
             </div>
 
-            <div className="flex items-center space-x-4">
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center space-x-4">
               <button
                 onClick={handleReportsClick}
-                className="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white px-6 py-3 rounded-2xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg"
+                className="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base"
                 data-testid="reports-button"
               >
-                <BarChart3 className="h-5 w-5" />
+                <BarChart3 className="h-4 md:h-5 w-4 md:w-5" />
                 <span>📊 Berichte</span>
               </button>
 
               <button
                 onClick={exportToExcel}
-                className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-6 py-3 rounded-2xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg"
+                className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base"
                 data-testid="export-excel-button"
               >
-                <Download className="h-5 w-5" />
-                <span>📋 Excel</span>
+                <Download className="h-4 md:h-5 w-4 md:w-5" />
+                <span className="hidden md:inline">📋 Excel</span>
+                <span className="md:hidden">📋</span>
               </button>
 
               <button
                 onClick={exportToPDF}
-                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-3 rounded-2xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg"
+                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base"
                 data-testid="export-pdf-button"
               >
-                <FileText className="h-5 w-5" />
-                <span>📄 PDF</span>
+                <FileText className="h-4 md:h-5 w-4 md:w-5" />
+                <span className="hidden md:inline">📄 PDF</span>
+                <span className="md:hidden">📄</span>
               </button>
 
               <button
                 onClick={() => setShowAddForm(true)}
-                className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-6 py-3 rounded-2xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg"
+                className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base"
                 data-testid="add-order-button"
               >
-                <Plus className="h-5 w-5" />
-                <span>➕ Neue Bestellung</span>
+                <Plus className="h-4 md:h-5 w-4 md:w-5" />
+                <span className="hidden md:inline">➕ Neue Bestellung</span>
+                <span className="md:hidden">➕</span>
+              </button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden">
+              <button
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                className="p-2 bg-white/10 backdrop-blur-sm rounded-xl text-white hover:bg-white/20 transition-all duration-300"
+              >
+                <Menu className="h-6 w-6" />
               </button>
             </div>
           </div>
+
+          {/* Mobile Menu */}
+          {showMobileMenu && (
+            <div className="lg:hidden border-t border-white/20 py-4">
+              <div className="flex flex-col space-y-3">
+                <button
+                  onClick={() => {
+                    handleReportsClick();
+                    setShowMobileMenu(false);
+                  }}
+                  className="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white px-4 py-3 rounded-xl flex items-center space-x-2 font-bold transition-all duration-300 text-sm"
+                  data-testid="mobile-reports-button"
+                >
+                  <BarChart3 className="h-4 w-4" />
+                  <span>📊 Berichte</span>
+                </button>
+
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => {
+                      exportToExcel();
+                      setShowMobileMenu(false);
+                    }}
+                    className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm"
+                    data-testid="mobile-export-excel-button"
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>📋 Excel</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      exportToPDF();
+                      setShowMobileMenu(false);
+                    }}
+                    className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm"
+                    data-testid="mobile-export-pdf-button"
+                  >
+                    <FileText className="h-4 w-4" />
+                    <span>📄 PDF</span>
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => {
+                    setShowAddForm(true);
+                    setShowMobileMenu(false);
+                  }}
+                  className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm"
+                  data-testid="mobile-add-order-button"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>➕ Neue Bestellung</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-3 md:px-4 lg:px-8 py-4 md:py-8 relative z-10">
         {/* Dashboard Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-blue-400 via-purple-500 to-blue-600 rounded-3xl p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
+          <div className="bg-gradient-to-br from-blue-400 via-purple-500 to-blue-600 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
             <div className="flex items-center justify-between text-white">
               <div>
-                <p className="text-white/90 text-sm font-bold uppercase tracking-wider">Gesamte Artikel</p>
-                <p className="text-3xl font-black">{totalItems}</p>
+                <p className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-wider">Gesamte Artikel</p>
+                <p className="text-2xl md:text-3xl font-black">{totalItems}</p>
                 <p className="text-white/80 text-xs font-semibold">Bestellungen</p>
               </div>
-              <Package className="h-12 w-12 text-white/80" />
+              <Package className="h-8 md:h-12 w-8 md:w-12 text-white/80" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-red-400 via-pink-500 to-red-600 rounded-3xl p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
+          <div className="bg-gradient-to-br from-red-400 via-pink-500 to-red-600 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
             <div className="flex items-center justify-between text-white">
               <div>
-                <p className="text-white/90 text-sm font-bold uppercase tracking-wider">Kritische Lager</p>
-                <p className="text-3xl font-black">{kritischeLager}</p>
+                <p className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-wider">Kritische Lager</p>
+                <p className="text-2xl md:text-3xl font-black">{kritischeLager}</p>
                 <p className="text-white/80 text-xs font-semibold">Sofortiger Handlungsbedarf</p>
               </div>
-              <AlertTriangle className="h-12 w-12 text-white/80" />
+              <AlertTriangle className="h-8 md:h-12 w-8 md:w-12 text-white/80" />
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-amber-400 via-orange-500 to-amber-600 rounded-3xl p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
+          <div className="bg-gradient-to-br from-amber-400 via-orange-500 to-amber-600 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
             <div className="flex items-center justify-between text-white">
               <div>
-                <p className="text-white/90 text-sm font-bold uppercase tracking-wider">Niedrige Lager</p>
-                <p className="text-3xl font-black">{niedrigeLager}</p>
+                <p className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-wider">Niedrige Lager</p>
+                <p className="text-2xl md:text-3xl font-black">{niedrigeLager}</p>
                 <p className="text-white/80 text-xs font-semibold">Aufmerksamkeit erforderlich</p>
               </div>
-              <Clock className="h-12 w-12 text-white/80" />
+              <Clock className="h-8 md:h-12 w-8 md:w-12 text-white/80" />
             </div>
           </div>
         </div>
 
         {/* Search and Filters */}
-        <div className="backdrop-blur-xl bg-white/10 rounded-3xl p-6 shadow-2xl border border-white/20 mb-8">
-          <div className="flex flex-wrap gap-4">
-            <div className="relative flex-1 min-w-64">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/60 h-5 w-5" />
+        <div className="backdrop-blur-xl bg-white/10 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl border border-white/20 mb-6 md:mb-8">
+          <div className="flex flex-col space-y-3 md:space-y-4">
+            <div className="relative">
+              <Search className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-white/60 h-4 md:h-5 w-4 md:w-5" />
               <input
                 type="text"
                 placeholder="🔍 Produkt suchen..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white placeholder-white/60 font-medium"
+                className="w-full pl-10 md:pl-12 pr-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white placeholder-white/60 font-medium text-sm md:text-base"
                 data-testid="search-input"
               />
             </div>
 
-            <select
-              value={filterKategorie}
-              onChange={(e) => setFilterKategorie(e.target.value)}
-              className="px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white font-medium"
-              data-testid="category-filter"
-            >
-              <option value="" className="bg-gray-800 text-white">Alle Kategorien</option>
-              {kategorien.map(k => (
-                <option key={k} value={k} className="bg-gray-800 text-white">{k}</option>
-              ))}
-            </select>
+            <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4">
+              <select
+                value={filterKategorie}
+                onChange={(e) => setFilterKategorie(e.target.value)}
+                className="flex-1 px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white font-medium text-sm md:text-base"
+                data-testid="category-filter"
+              >
+                <option value="" className="bg-gray-800 text-white">Alle Kategorien</option>
+                {kategorien.map(k => (
+                  <option key={k} value={k} className="bg-gray-800 text-white">
+                    {k.length > 20 && window.innerWidth < 768 ? k.substring(0, 20) + '...' : k}
+                  </option>
+                ))}
+              </select>
 
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-pink-500/50 focus:border-pink-400 transition-all duration-300 text-white font-medium"
-              data-testid="status-filter"
-            >
-              <option value="" className="bg-gray-800 text-white">Alle Status</option>
-              {statusOptions.map(s => (
-                <option key={s} value={s} className="bg-gray-800 text-white">{s}</option>
-              ))}
-            </select>
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="flex-1 px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-pink-500/50 focus:border-pink-400 transition-all duration-300 text-white font-medium text-sm md:text-base"
+                data-testid="status-filter"
+              >
+                <option value="" className="bg-gray-800 text-white">Alle Status</option>
+                {statusOptions.map(s => (
+                  <option key={s} value={s} className="bg-gray-800 text-white">{s}</option>
+                ))}
+              </select>
+            </div>
 
-            <div className="flex bg-white/10 backdrop-blur-sm rounded-2xl border border-white/30 overflow-hidden">
+            <div className="flex bg-white/10 backdrop-blur-sm rounded-xl md:rounded-2xl border border-white/30 overflow-hidden">
               <button
                 onClick={() => setViewMode('cards')}
-                className={`px-6 py-3 font-bold transition-all duration-300 ${
+                className={`flex-1 px-4 md:px-6 py-2 md:py-3 font-bold transition-all duration-300 text-sm md:text-base ${
                   viewMode === 'cards' 
                     ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-white' 
                     : 'text-white/70 hover:text-white hover:bg-white/5'
@@ -722,7 +800,7 @@ const UltraModernHospitalApp = () => {
               </button>
               <button
                 onClick={() => setViewMode('table')}
-                className={`px-6 py-3 font-bold transition-all duration-300 ${
+                className={`flex-1 px-4 md:px-6 py-2 md:py-3 font-bold transition-all duration-300 text-sm md:text-base ${
                   viewMode === 'table' 
                     ? 'bg-gradient-to-r from-purple-400 to-pink-500 text-white' 
                     : 'text-white/70 hover:text-white hover:bg-white/5'
