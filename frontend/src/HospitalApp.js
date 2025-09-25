@@ -9,18 +9,44 @@ const ReportsPage = ({ orders, onBack }) => {
 
   const [dateRange, setDateRange] = useState('30'); // Tage
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [useCustomDateRange, setUseCustomDateRange] = useState(false);
 
-  const today = new Date();
-  const filterDate = new Date();
-  filterDate.setDate(today.getDate() - parseInt(dateRange));
+  // Filtered data based on date range and category
+  const getFilteredReports = () => {
+    let filtered = orders;
 
-  const filteredReports = orders.filter(order => {
-    const orderDate = new Date(order.bestelldatum);
-    const categoryMatch = selectedCategory === '' || order.kategorie === selectedCategory;
-    const dateMatch = orderDate >= filterDate;
-    return categoryMatch && dateMatch;
-  });
+    // Date filtering
+    if (useCustomDateRange && startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999); // Include the end day
+      
+      filtered = filtered.filter(order => {
+        const orderDate = new Date(order.bestelldatum);
+        return orderDate >= start && orderDate <= end;
+      });
+    } else if (!useCustomDateRange) {
+      const today = new Date();
+      const filterDate = new Date();
+      filterDate.setDate(today.getDate() - parseInt(dateRange));
+      
+      filtered = filtered.filter(order => {
+        const orderDate = new Date(order.bestelldatum);
+        return orderDate >= filterDate;
+      });
+    }
 
+    // Category filtering
+    if (selectedCategory) {
+      filtered = filtered.filter(order => order.kategorie === selectedCategory);
+    }
+
+    return filtered;
+  };
+
+  const filteredReports = getFilteredReports();
   const totalBestellungen = filteredReports.reduce((sum, order) => sum + (order.menge || 0), 0);
   const totalVerteilte = filteredReports.reduce((sum, order) => sum + (order.verteilteAnzahl || 0), 0);
   const totalAktuell = filteredReports.reduce((sum, order) => sum + (order.aktuellerBestand || 0), 0);
@@ -35,164 +61,586 @@ const ReportsPage = ({ orders, onBack }) => {
     kategorieStats[order.kategorie].bestand += order.aktuellerBestand || 0;
   });
 
-  return (
-    <div className="space-y-4 md:space-y-8">
-      {/* Header */}
-      <div className="backdrop-blur-xl bg-white/10 rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-2xl border border-white/20">
-        <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0 mb-4 md:mb-6">
-          <h2 className="text-2xl md:text-4xl font-black bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent text-center md:text-left">
-            📊 Bestellungen & Verbrauch Berichte
-          </h2>
-          <button
-            onClick={onBack}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg w-full md:w-auto"
-          >
-            <span>⬅️ Zurück</span>
+  // Excel Export für Reports
+  const exportReportsToExcel = async () => {
+    try {
+      console.log('📊 Reports Excel Export wird gestartet...');
+
+      const dateRangeText = useCustomDateRange && startDate && endDate 
+        ? `${startDate} bis ${endDate}` 
+        : `Letzte ${dateRange} Tage`;
+
+      // CSV Daten vorbereiten
+      const csvData = [
+        ['HospitalGo Berichte - ' + dateRangeText],
+        [''],
+        ['Produkt Name', 'Kategorie', 'Bestellmenge', 'Einheit', 'Aktueller Bestand', 'Verteilte Anzahl', 'Status', 'Priorität', 'Bestelldatum', 'Lieferant', 'Verbrauchsrate'],
+        ...filteredReports.map(order => {
+          const verbrauchsrate = order.menge > 0 ? ((order.verteilteAnzahl || 0) / order.menge * 100).toFixed(1) : '0';
+          return [
+            order.produktName || '',
+            order.kategorie || '',
+            order.menge || '',
+            order.einheit || '',
+            order.aktuellerBestand || '',
+            order.verteilteAnzahl || 0,
+            order.status || '',
+            order.prioritaet || '',
+            order.bestelldatum || '',
+            order.lieferant || '',
+            verbrauchsrate + '%'
+          ];
+        })
+      ];
+
+      // CSV String erstellen
+      const csvString = csvData.map(row =>
+        row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(',')
+      ).join('\n');
+
+      // BOM für deutsche Umlaute hinzufügen
+      const BOM = '\uFEFF';
+      const csvContent = BOM + csvString;
+
+      // Blob erstellen und Download auslösen
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const filename = `HospitalGo_Berichte_${dateRangeText.replace(/\s+/g, '_')}.csv`;
+      
+      if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, filename);
+      } else {
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = filename;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+
+      // Erfolgsmeldung anzeigen
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        background: rgba(0,0,0,0.8); z-index: 10000; display: flex; 
+        align-items: center; justify-content: center; font-family: Arial;
+      `;
+
+      modal.innerHTML = `
+        <div style="background: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 500px;">
+          <h2 style="color: #667eea; margin-bottom: 15px;">✅ Berichte Excel-Datei heruntergeladen!</h2>
+          <p style="margin-bottom: 20px; color: #333;">
+            Die Berichtsdaten wurden erfolgreich als CSV-Datei gespeichert.<br>
+            <strong>Zeitraum:</strong> ${dateRangeText}<br>
+            <strong>Dateiname:</strong> ${filename}
+          </p>
+          <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin: 15px 0; font-size: 12px;">
+            📊 ${filteredReports.length} Berichte exportiert<br>
+            📋 Bereit für Excel, LibreOffice oder Google Sheets
+          </div>
+          <button onclick="this.parentElement.parentElement.remove()" 
+                  style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
+            Schließen
           </button>
         </div>
+      `;
 
-        {/* Filters */}
-        <div className="flex flex-col space-y-3 md:flex-row md:flex-wrap md:gap-4 md:space-y-0 mb-4 md:mb-6">
-          <select
-            className="w-full md:w-auto px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white font-medium text-sm md:text-base"
-            value={dateRange}
-            onChange={(e) => setDateRange(e.target.value)}
-          >
-            <option value="1" className="bg-gray-800 text-white">Letzter Tag</option>
-            <option value="7" className="bg-gray-800 text-white">Letzte Woche</option>
-            <option value="30" className="bg-gray-800 text-white">Letzter Monat</option>
-            <option value="90" className="bg-gray-800 text-white">Letzte 3 Monate</option>
-            <option value="365" className="bg-gray-800 text-white">Letztes Jahr</option>
-          </select>
+      document.body.appendChild(modal);
+      console.log('✅ Reports CSV-Datei erfolgreich heruntergeladen');
 
-          <select
-            className="w-full md:w-auto px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white font-medium text-sm md:text-base"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            <option value="" className="bg-gray-800 text-white">Alle Kategorien</option>
-            <option value="Getränke" className="bg-gray-800 text-white">Getränke</option>
-            <option value="Hygieneartikel" className="bg-gray-800 text-white">Hygieneartikel</option>
-            <option value="Medizinische Verbrauchsmaterialien" className="bg-gray-800 text-white">Med. Verbrauchsmat.</option>
-            <option value="Reinigungsmittel" className="bg-gray-800 text-white">Reinigungsmittel</option>
-            <option value="Büromaterial" className="bg-gray-800 text-white">Büromaterial</option>
-            <option value="Lebensmittel" className="bg-gray-800 text-white">Lebensmittel</option>
-          </select>
-        </div>
-      </div>
+    } catch (error) {
+      console.error('❌ Reports Excel Export Fehler:', error);
+      alert('❌ Fehler beim Excel-Export. Bitte versuchen Sie es erneut.');
+    }
+  };
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-        <div className="bg-gradient-to-br from-blue-400 via-purple-500 to-blue-600 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
-          <div className="flex items-center justify-between text-white">
-            <div>
-              <p className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-wider">Gesamte Bestellungen</p>
-              <p className="text-2xl md:text-3xl font-black">{totalBestellungen}</p>
-              <p className="text-white/80 text-xs font-semibold">Letzte {dateRange} Tage</p>
-            </div>
-            <Package className="h-8 md:h-12 w-8 md:w-12 text-white/80" />
+  // PDF Export für Reports
+  const exportReportsToPDF = () => {
+    try {
+      console.log('📄 Reports PDF Export wird gestartet...');
+
+      const dateRangeText = useCustomDateRange && startDate && endDate 
+        ? `${startDate} bis ${endDate}` 
+        : `Letzte ${dateRange} Tage`;
+
+      // HTML-Inhalt für PDF erstellen
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>HospitalGo Berichte</title>
+          <style>
+            body { 
+              font-family: Arial, sans-serif; 
+              margin: 20px;
+              color: #333;
+            }
+            .header { 
+              text-align: center;
+              margin-bottom: 30px;
+              border-bottom: 2px solid #7c3aed;
+              padding-bottom: 20px;
+            }
+            h1 { 
+              color: #7c3aed; 
+              margin-bottom: 10px;
+            }
+            .summary-cards {
+              display: flex;
+              justify-content: space-around;
+              margin: 30px 0;
+            }
+            .summary-card {
+              background: #f8fafc;
+              border: 1px solid #e2e8f0;
+              border-radius: 8px;
+              padding: 20px;
+              text-align: center;
+              min-width: 150px;
+            }
+            .card-value {
+              font-size: 24px;
+              font-weight: bold;
+              color: #7c3aed;
+            }
+            .card-label {
+              font-size: 12px;
+              color: #64748b;
+              margin-top: 5px;
+            }
+            table { 
+              width: 100%; 
+              border-collapse: collapse;
+              margin-top: 20px;
+            }
+            th, td { 
+              border: 1px solid #ddd; 
+              padding: 8px; 
+              text-align: left;
+              font-size: 11px;
+            }
+            th { 
+              background-color: #7c3aed; 
+              color: white;
+              font-weight: bold;
+            }
+            tr:nth-child(even) { 
+              background-color: #f9fafb; 
+            }
+            .kritisch { color: #dc2626; font-weight: bold; }
+            .hoch { color: #f59e0b; font-weight: bold; }
+            .normal { color: #059669; }
+            .niedrig { color: #6b7280; }
+            .footer {
+              margin-top: 30px;
+              text-align: center;
+              font-size: 10px;
+              color: #666;
+              border-top: 1px solid #e2e8f0;
+              padding-top: 20px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>🏥 HospitalGo - Bestellungsberichte</h1>
+            <p><strong>Berichtszeitraum:</strong> ${dateRangeText}</p>
+            <p>Erstellt am: ${new Date().toLocaleDateString('de-DE')} um ${new Date().toLocaleTimeString('de-DE')}</p>
           </div>
-        </div>
-
-        <div className="bg-gradient-to-br from-orange-400 via-red-500 to-orange-600 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
-          <div className="flex items-center justify-between text-white">
-            <div>
-              <p className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-wider">Verteilte Menge</p>
-              <p className="text-2xl md:text-3xl font-black">{totalVerteilte}</p>
-              <p className="text-white/80 text-xs font-semibold">Verbrauch</p>
+          
+          <div class="summary-cards">
+            <div class="summary-card">
+              <div class="card-value">${totalBestellungen}</div>
+              <div class="card-label">Gesamte Bestellungen</div>
             </div>
-            <TrendingUp className="h-8 md:h-12 w-8 md:w-12 text-white/80" />
+            <div class="summary-card">
+              <div class="card-value">${totalVerteilte}</div>
+              <div class="card-label">Verteilte Menge</div>
+            </div>
+            <div class="summary-card">
+              <div class="card-value">${totalAktuell}</div>
+              <div class="card-label">Aktueller Bestand</div>
+            </div>
+            <div class="summary-card">
+              <div class="card-value">${filteredReports.length}</div>
+              <div class="card-label">Anzahl Produkte</div>
+            </div>
           </div>
-        </div>
-
-        <div className="bg-gradient-to-br from-emerald-400 via-green-500 to-emerald-600 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
-          <div className="flex items-center justify-between text-white">
-            <div>
-              <p className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-wider">Aktueller Bestand</p>
-              <p className="text-2xl md:text-3xl font-black">{totalAktuell}</p>
-              <p className="text-white/80 text-xs font-semibold">Verfügbar</p>
-            </div>
-            <BarChart3 className="h-8 md:h-12 w-8 md:w-12 text-white/80" />
-          </div>
-        </div>
-      </div>
-
-      {/* Category Analysis */}
-      <div className="backdrop-blur-xl bg-white/10 rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-2xl border border-white/20">
-        <h3 className="text-xl md:text-2xl font-black text-white mb-4 md:mb-6">📈 Kategorie Analyse</h3>
-        <div className="space-y-3 md:space-y-4">
-          {Object.entries(kategorieStats).map(([kategorie, stats]) => (
-            <div key={kategorie} className="bg-white/5 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-6">
-              <div className="flex flex-col space-y-2 md:flex-row md:justify-between md:items-center md:space-y-0 mb-3 md:mb-4">
-                <h4 className="text-sm md:text-lg font-bold text-white">{kategorie}</h4>
-                <div className="flex flex-wrap gap-2 md:space-x-4 text-xs md:text-sm text-white/80">
-                  <span>📦 Bestellt: {stats.bestellt}</span>
-                  <span>🚀 Verteilt: {stats.verteilt}</span>
-                  <span>📊 Bestand: {stats.bestand}</span>
-                </div>
-              </div>
-              <div className="relative">
-                <div className="w-full bg-white/20 rounded-full h-2 md:h-3">
-                  <div
-                    className="bg-gradient-to-r from-cyan-400 to-blue-500 h-2 md:h-3 rounded-full transition-all duration-1000"
-                    style={{ width: `${Math.min((stats.verteilt / (stats.bestellt || 1)) * 100, 100)}%` }}
-                  ></div>
-                </div>
-                <p className="text-xs text-white/70 mt-1">
-                  Verbrauchsrate: {stats.bestellt > 0 ? ((stats.verteilt / stats.bestellt) * 100).toFixed(1) : 0}%
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Detailed Table */}
-      <div className="backdrop-blur-xl bg-white/10 rounded-2xl md:rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-        <div className="p-4 md:p-6 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600">
-          <h3 className="text-lg md:text-xl font-black text-white">📋 Detaillierte Übersicht ({dateRange} Tage)</h3>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-white/5">
+          
+          <table>
+            <thead>
               <tr>
-                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white">Produkt</th>
-                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white hidden md:table-cell">Kategorie</th>
-                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white">Bestellt</th>
-                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white">Verteilt</th>
-                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white">Bestand</th>
-                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white hidden sm:table-cell">Rate</th>
+                <th>Produkt</th>
+                <th>Kategorie</th>
+                <th>Menge</th>
+                <th>Einheit</th>
+                <th>Bestand</th>
+                <th>Verteilt</th>
+                <th>Status</th>
+                <th>Priorität</th>
+                <th>Bestelldatum</th>
+                <th>Lieferant</th>
+                <th>Rate</th>
               </tr>
             </thead>
             <tbody>
-              {filteredReports.map((order, index) => {
-                const verbrauchsrate = order.menge > 0 ? ((order.verteilteAnzahl || 0) / order.menge * 100) : 0;
-                return (
-                  <tr key={order.id} className={index % 2 === 0 ? 'bg-white/5' : 'bg-transparent'}>
-                    <td className="px-3 md:px-6 py-3 md:py-4 text-white font-medium text-xs md:text-sm">
-                      <div>
-                        <div>{order.produktName}</div>
-                        <div className="text-xs text-white/60 md:hidden">{order.kategorie}</div>
-                      </div>
-                    </td>
-                    <td className="px-3 md:px-6 py-3 md:py-4 text-white/80 text-xs md:text-sm hidden md:table-cell">{order.kategorie}</td>
-                    <td className="px-3 md:px-6 py-3 md:py-4 text-white font-bold text-xs md:text-sm">{order.menge} {order.einheit}</td>
-                    <td className="px-3 md:px-6 py-3 md:py-4 text-white font-bold text-xs md:text-sm">{order.verteilteAnzahl || 0} {order.verteilungseinheit || order.einheit}</td>
-                    <td className="px-3 md:px-6 py-3 md:py-4 text-white font-bold text-xs md:text-sm">{order.aktuellerBestand} {order.bestandseinheit || order.einheit}</td>
-                    <td className="px-3 md:px-6 py-3 md:py-4 hidden sm:table-cell">
-                      <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-bold ${
-                        verbrauchsrate > 80 ? 'bg-red-500/80 text-white' :
-                          verbrauchsrate > 50 ? 'bg-yellow-500/80 text-white' :
-                            'bg-green-500/80 text-white'
-                      }`}>
-                        {verbrauchsrate.toFixed(1)}%
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
+              ${filteredReports.map(order => {
+                const verbrauchsrate = order.menge > 0 ? ((order.verteilteAnzahl || 0) / order.menge * 100).toFixed(1) : 0;
+                return `
+                <tr>
+                  <td>${order.produktName}</td>
+                  <td>${order.kategorie}</td>
+                  <td>${order.menge}</td>
+                  <td>${order.einheit}</td>
+                  <td>${order.aktuellerBestand}</td>
+                  <td>${order.verteilteAnzahl || 0}</td>
+                  <td>${order.status}</td>
+                  <td class="${order.prioritaet.toLowerCase()}">${order.prioritaet}</td>
+                  <td>${new Date(order.bestelldatum).toLocaleDateString('de-DE')}</td>
+                  <td>${order.lieferant || 'N/A'}</td>
+                  <td>${verbrauchsrate}%</td>
+                </tr>
+              `;
+              }).join('')}
             </tbody>
           </table>
+          
+          <div class="footer">
+            <p>Generiert von HospitalGo - Smart Hospital Solutions</p>
+            <p>© ${new Date().getFullYear()} - Alle Rechte vorbehalten</p>
+          </div>
+        </body>
+        </html>
+      `;
+
+      // Neues Fenster öffnen und Druckdialog anzeigen
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      
+      // Warten bis Inhalt geladen ist, dann Druckdialog öffnen
+      printWindow.onload = function() {
+        setTimeout(() => {
+          printWindow.print();
+          
+          // Optional: Fenster nach dem Drucken schließen
+          printWindow.onafterprint = function() {
+            printWindow.close();
+          };
+        }, 500);
+      };
+
+      console.log('✅ Reports PDF-Druckdialog geöffnet');
+      
+    } catch (error) {
+      console.error('❌ Reports PDF Export Fehler:', error);
+      alert('❌ Fehler beim PDF-Export. Bitte versuchen Sie es erneut.');
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative">
+      {/* Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-60 md:w-80 h-60 md:h-80 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-60 md:w-80 h-60 md:h-80 bg-gradient-to-r from-pink-400 to-red-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
+      </div>
+
+      {/* Header */}
+      <div className="relative z-10 backdrop-blur-xl bg-white/10 border-b border-white/20 shadow-2xl">
+        <div className="max-w-7xl mx-auto px-3 md:px-4 lg:px-8 py-4 md:py-6">
+          <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h1 className="text-2xl md:text-4xl font-black bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                📊 Bestellungen & Verbrauch Berichte
+              </h1>
+              <p className="text-white/80 text-sm md:text-base mt-1">
+                Analysieren Sie Ihre Bestellungen und Verbrauchsdaten
+              </p>
+            </div>
+            <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-3">
+              <button
+                onClick={exportReportsToExcel}
+                className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm"
+              >
+                <Download className="h-4 w-4" />
+                <span>📋 Excel exportieren</span>
+              </button>
+              
+              <button
+                onClick={exportReportsToPDF}
+                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm"
+              >
+                <FileText className="h-4 w-4" />
+                <span>📄 PDF exportieren</span>
+              </button>
+              
+              <button
+                onClick={onBack}
+                className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm"
+              >
+                <span>⬅️ Zurück</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="relative z-10 max-w-7xl mx-auto px-3 md:px-4 lg:px-8 py-4 md:py-6">
+        <div className="backdrop-blur-xl bg-white/10 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl border border-white/20 mb-6">
+          <h3 className="text-lg md:text-xl font-bold text-white mb-4">🔍 Filter & Zeitraum</h3>
+          
+          {/* Date Range Toggle */}
+          <div className="flex flex-col space-y-4 mb-6">
+            <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
+              <button
+                onClick={() => setUseCustomDateRange(false)}
+                className={`px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
+                  !useCustomDateRange 
+                    ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white' 
+                    : 'bg-white/10 text-white/70 hover:bg-white/20'
+                }`}
+              >
+                📅 Vorgefertigte Zeiträume
+              </button>
+              <button
+                onClick={() => setUseCustomDateRange(true)}
+                className={`px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
+                  useCustomDateRange 
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' 
+                    : 'bg-white/10 text-white/70 hover:bg-white/20'
+                }`}
+              >
+                🗓️ Benutzerdefinierter Zeitraum
+              </button>
+            </div>
+          </div>
+
+          {/* Filter Controls */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Predefined Date Range */}
+            {!useCustomDateRange && (
+              <select
+                className="px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white font-medium text-sm md:text-base"
+                value={dateRange}
+                onChange={(e) => setDateRange(e.target.value)}
+              >
+                <option value="1" className="bg-gray-800 text-white">Letzter Tag</option>
+                <option value="7" className="bg-gray-800 text-white">Letzte Woche</option>
+                <option value="30" className="bg-gray-800 text-white">Letzter Monat</option>
+                <option value="90" className="bg-gray-800 text-white">Letzte 3 Monate</option>
+                <option value="180" className="bg-gray-800 text-white">Letzte 6 Monate</option>
+                <option value="365" className="bg-gray-800 text-white">Letztes Jahr</option>
+              </select>
+            )}
+
+            {/* Custom Date Range */}
+            {useCustomDateRange && (
+              <>
+                <div>
+                  <label className="block text-white/80 text-xs font-bold mb-1">Von Datum</label>
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="w-full px-3 py-2 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-white/80 text-xs font-bold mb-1">Bis Datum</label>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="w-full px-3 py-2 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white text-sm"
+                  />
+                </div>
+              </>
+            )}
+
+            {/* Category Filter */}
+            <select
+              className="px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-green-500/50 focus:border-green-400 transition-all duration-300 text-white font-medium text-sm md:text-base"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              <option value="" className="bg-gray-800 text-white">Alle Kategorien</option>
+              <option value="Getränke" className="bg-gray-800 text-white">Getränke</option>
+              <option value="Hygieneartikel" className="bg-gray-800 text-white">Hygieneartikel</option>
+              <option value="Medizinische Verbrauchsmaterialien" className="bg-gray-800 text-white">Med. Verbrauchsmat.</option>
+              <option value="Reinigungsmittel" className="bg-gray-800 text-white">Reinigungsmittel</option>
+              <option value="Büromaterial" className="bg-gray-800 text-white">Büromaterial</option>
+              <option value="Lebensmittel" className="bg-gray-800 text-white">Lebensmittel</option>
+            </select>
+
+            {/* Results Info */}
+            <div className="flex items-center justify-center bg-white/5 rounded-xl px-4 py-2">
+              <span className="text-white font-medium text-sm">
+                📈 {filteredReports.length} Ergebnisse
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6">
+          <div className="bg-gradient-to-br from-blue-400 via-purple-500 to-blue-600 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
+            <div className="flex items-center justify-between text-white">
+              <div>
+                <p className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-wider">Gesamte Bestellungen</p>
+                <p className="text-xl md:text-3xl font-black">{totalBestellungen}</p>
+                <p className="text-white/80 text-xs font-semibold">
+                  {useCustomDateRange && startDate && endDate 
+                    ? `${startDate} bis ${endDate}` 
+                    : `Letzte ${dateRange} Tage`}
+                </p>
+              </div>
+              <Package className="h-6 md:h-12 w-6 md:w-12 text-white/80" />
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-orange-400 via-red-500 to-orange-600 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
+            <div className="flex items-center justify-between text-white">
+              <div>
+                <p className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-wider">Verteilte Menge</p>
+                <p className="text-xl md:text-3xl font-black">{totalVerteilte}</p>
+                <p className="text-white/80 text-xs font-semibold">Verbrauch</p>
+              </div>
+              <TrendingUp className="h-6 md:h-12 w-6 md:w-12 text-white/80" />
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-emerald-400 via-green-500 to-emerald-600 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
+            <div className="flex items-center justify-between text-white">
+              <div>
+                <p className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-wider">Aktueller Bestand</p>
+                <p className="text-xl md:text-3xl font-black">{totalAktuell}</p>
+                <p className="text-white/80 text-xs font-semibold">Verfügbar</p>
+              </div>
+              <BarChart3 className="h-6 md:h-12 w-6 md:w-12 text-white/80" />
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-pink-400 via-rose-500 to-pink-600 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
+            <div className="flex items-center justify-between text-white">
+              <div>
+                <p className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-wider">Anzahl Produkte</p>
+                <p className="text-xl md:text-3xl font-black">{filteredReports.length}</p>
+                <p className="text-white/80 text-xs font-semibold">Gefiltert</p>
+              </div>
+              <Eye className="h-6 md:h-12 w-6 md:w-12 text-white/80" />
+            </div>
+          </div>
+        </div>
+
+        {/* Category Analysis */}
+        <div className="backdrop-blur-xl bg-white/10 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl border border-white/20 mb-6">
+          <h3 className="text-lg md:text-2xl font-black text-white mb-4 md:mb-6">📈 Kategorie Analyse</h3>
+          {Object.keys(kategorieStats).length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+              {Object.entries(kategorieStats).map(([kategorie, stats]) => (
+                <div key={kategorie} className="bg-white/5 backdrop-blur-sm rounded-xl p-4 md:p-6">
+                  <div className="flex flex-col space-y-2 mb-4">
+                    <h4 className="text-sm md:text-lg font-bold text-white">{kategorie}</h4>
+                    <div className="flex flex-wrap gap-2 md:gap-4 text-xs md:text-sm text-white/80">
+                      <span>📦 Bestellt: {stats.bestellt}</span>
+                      <span>🚀 Verteilt: {stats.verteilt}</span>
+                      <span>📊 Bestand: {stats.bestand}</span>
+                    </div>
+                  </div>
+                  <div className="relative">
+                    <div className="w-full bg-white/20 rounded-full h-2 md:h-3">
+                      <div
+                        className="bg-gradient-to-r from-cyan-400 to-blue-500 h-2 md:h-3 rounded-full transition-all duration-1000"
+                        style={{ width: `${Math.min((stats.verteilt / (stats.bestellt || 1)) * 100, 100)}%` }}
+                      ></div>
+                    </div>
+                    <p className="text-xs text-white/70 mt-1">
+                      Verbrauchsrate: {stats.bestellt > 0 ? ((stats.verteilt / stats.bestellt) * 100).toFixed(1) : 0}%
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-white/60 text-lg">📭 Keine Daten für den ausgewählten Zeitraum verfügbar</p>
+              <p className="text-white/40 text-sm mt-2">Versuchen Sie einen anderen Zeitraum oder Filter</p>
+            </div>
+          )}
+        </div>
+
+        {/* Detailed Table */}
+        <div className="backdrop-blur-xl bg-white/10 rounded-2xl md:rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+          <div className="p-4 md:p-6 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600">
+            <h3 className="text-lg md:text-xl font-black text-white">
+              📋 Detaillierte Übersicht 
+              ({useCustomDateRange && startDate && endDate 
+                ? `${startDate} bis ${endDate}` 
+                : `Letzte ${dateRange} Tage`})
+            </h3>
+          </div>
+          <div className="overflow-x-auto">
+            {filteredReports.length > 0 ? (
+              <table className="w-full">
+                <thead className="bg-white/5">
+                  <tr>
+                    <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white">Produkt</th>
+                    <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white hidden md:table-cell">Kategorie</th>
+                    <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white">Bestellt</th>
+                    <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white">Verteilt</th>
+                    <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white">Bestand</th>
+                    <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white hidden lg:table-cell">Rate</th>
+                    <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white hidden lg:table-cell">Datum</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredReports.map((order, index) => {
+                    const verbrauchsrate = order.menge > 0 ? ((order.verteilteAnzahl || 0) / order.menge * 100) : 0;
+                    return (
+                      <tr key={order.id} className={index % 2 === 0 ? 'bg-white/5' : 'bg-transparent'}>
+                        <td className="px-3 md:px-6 py-3 md:py-4 text-white font-medium text-xs md:text-sm">
+                          <div>
+                            <div className="font-bold">{order.produktName}</div>
+                            <div className="text-xs text-white/60 md:hidden">{order.kategorie}</div>
+                            <div className="text-xs text-white/60 lg:hidden">
+                              {new Date(order.bestelldatum).toLocaleDateString('de-DE')}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-3 md:px-6 py-3 md:py-4 text-white/80 text-xs md:text-sm hidden md:table-cell">{order.kategorie}</td>
+                        <td className="px-3 md:px-6 py-3 md:py-4 text-white font-bold text-xs md:text-sm">{order.menge} {order.einheit}</td>
+                        <td className="px-3 md:px-6 py-3 md:py-4 text-white font-bold text-xs md:text-sm">{order.verteilteAnzahl || 0}</td>
+                        <td className="px-3 md:px-6 py-3 md:py-4 text-white font-bold text-xs md:text-sm">{order.aktuellerBestand}</td>
+                        <td className="px-3 md:px-6 py-3 md:py-4 hidden lg:table-cell">
+                          <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-bold ${
+                            verbrauchsrate > 80 ? 'bg-red-500/80 text-white' :
+                              verbrauchsrate > 50 ? 'bg-yellow-500/80 text-white' :
+                                'bg-green-500/80 text-white'
+                          }`}>
+                            {verbrauchsrate.toFixed(1)}%
+                          </span>
+                        </td>
+                        <td className="px-3 md:px-6 py-3 md:py-4 text-white text-xs md:text-sm hidden lg:table-cell">
+                          {new Date(order.bestelldatum).toLocaleDateString('de-DE')}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            ) : (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">📭</div>
+                <p className="text-white/60 text-xl mb-2">Keine Berichte gefunden</p>
+                <p className="text-white/40 text-sm">Versuchen Sie einen anderen Zeitraum oder entfernen Sie Filter</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
