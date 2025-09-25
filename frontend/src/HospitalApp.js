@@ -267,6 +267,7 @@ const UltraModernHospitalApp = () => {
   const [filterStatus, setFilterStatus] = useState('');
   const [viewMode, setViewMode] = useState('cards');
   const [showReports, setShowReports] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const kategorien = ['Getränke', 'Hygieneartikel', 'Medizinische Verbrauchsmaterialien', 'Reinigungsmittel', 'Büromaterial', 'Lebensmittel'];
   const statusOptions = ['Bestellt', 'Geliefert', 'Storniert', 'Ausstehend'];
