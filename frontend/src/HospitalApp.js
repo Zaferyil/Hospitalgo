@@ -816,52 +816,52 @@ const UltraModernHospitalApp = () => {
 
         {/* Orders Display */}
         {viewMode === 'cards' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
             {filteredOrders.map((order) => (
-              <div key={order.id} className="backdrop-blur-xl bg-white/10 rounded-3xl p-6 shadow-2xl border border-white/20 transform hover:scale-105 transition-all duration-500">
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-xl font-black text-white mb-2" data-testid={`order-title-${order.id}`}>
+              <div key={order.id} className="backdrop-blur-xl bg-white/10 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl border border-white/20 transform hover:scale-105 transition-all duration-500">
+                <div className="flex justify-between items-start mb-3 md:mb-4">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg md:text-xl font-black text-white mb-2 truncate" data-testid={`order-title-${order.id}`} title={order.produktName}>
                       {order.produktName}
                     </h3>
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold text-white ${getCategoryColor(order.kategorie)}`}>
-                        {order.kategorie}
+                    <div className="flex flex-wrap gap-1 md:gap-2 mb-2 md:mb-3">
+                      <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-bold text-white ${getCategoryColor(order.kategorie)}`}>
+                        {order.kategorie.length > 15 ? order.kategorie.substring(0, 15) + '...' : order.kategorie}
                       </span>
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold text-white ${getStatusColor(order.status)}`}>
+                      <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-bold text-white ${getStatusColor(order.status)}`}>
                         {order.status}
                       </span>
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold text-white ${getPriorityColor(order.prioritaet)}`}>
+                      <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-bold text-white ${getPriorityColor(order.prioritaet)}`}>
                         {order.prioritaet}
                       </span>
                     </div>
                   </div>
-                  <div className="flex space-x-2">
+                  <div className="flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-2 ml-2">
                     <button
                       onClick={() => handleEditOrder(order)}
-                      className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-xl transition-all duration-300 transform hover:scale-110 shadow-lg"
+                      className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-lg md:rounded-xl transition-all duration-300 transform hover:scale-110 shadow-lg"
                       data-testid={`edit-order-${order.id}`}
                     >
-                      <Edit className="h-4 w-4" />
+                      <Edit className="h-3 md:h-4 w-3 md:w-4" />
                     </button>
                     <button
                       onClick={() => handleDeleteOrder(order.id)}
-                      className="p-2 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-xl transition-all duration-300 transform hover:scale-110 shadow-lg"
+                      className="p-2 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-lg md:rounded-xl transition-all duration-300 transform hover:scale-110 shadow-lg"
                       data-testid={`delete-order-${order.id}`}
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-3 md:h-4 w-3 md:w-4" />
                     </button>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 text-white">
+                <div className="grid grid-cols-2 gap-3 md:gap-4 text-white mb-3 md:mb-4">
                   <div>
                     <p className="text-white/60 text-xs font-semibold uppercase">Menge</p>
-                    <p className="font-bold text-lg">{order.menge} {order.einheit}</p>
+                    <p className="font-bold text-sm md:text-lg truncate">{order.menge} {order.einheit}</p>
                   </div>
                   <div>
                     <p className="text-white/60 text-xs font-semibold uppercase">Aktueller Bestand</p>
-                    <p className={`font-bold text-lg ${
+                    <p className={`font-bold text-sm md:text-lg truncate ${
                       getLagerStatus(order) === 'kritisch' ? 'text-red-400' :
                       getLagerStatus(order) === 'niedrig' ? 'text-yellow-400' : 'text-green-400'
                     }`}>
@@ -870,16 +870,16 @@ const UltraModernHospitalApp = () => {
                   </div>
                   <div>
                     <p className="text-white/60 text-xs font-semibold uppercase">Bestelldatum</p>
-                    <p className="font-bold">{new Date(order.bestelldatum).toLocaleDateString('de-DE')}</p>
+                    <p className="font-bold text-sm md:text-base">{new Date(order.bestelldatum).toLocaleDateString('de-DE')}</p>
                   </div>
                   <div>
                     <p className="text-white/60 text-xs font-semibold uppercase">Lieferant</p>
-                    <p className="font-bold">{order.lieferant || 'N/A'}</p>
+                    <p className="font-bold text-sm md:text-base truncate" title={order.lieferant || 'N/A'}>{order.lieferant || 'N/A'}</p>
                   </div>
                 </div>
 
                 {/* Stock Level Indicator */}
-                <div className="mt-4">
+                <div className="mb-3 md:mb-4">
                   <div className="flex justify-between text-xs text-white/60 mb-1">
                     <span>Lagerstand</span>
                     <span>{order.mindestBestand} min / {order.maxBestand} max</span>
@@ -899,9 +899,9 @@ const UltraModernHospitalApp = () => {
                 </div>
 
                 {order.notizen && (
-                  <div className="mt-4 p-3 bg-white/5 rounded-xl">
+                  <div className="p-3 bg-white/5 rounded-xl">
                     <p className="text-white/60 text-xs font-semibold uppercase mb-1">Notizen</p>
-                    <p className="text-white text-sm">{order.notizen}</p>
+                    <p className="text-white text-xs md:text-sm break-words">{order.notizen}</p>
                   </div>
                 )}
               </div>
