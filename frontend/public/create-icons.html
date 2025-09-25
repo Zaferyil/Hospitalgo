@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head><title>Icon Generator</title></head>
+<body>
+<canvas id="canvas"></canvas>
+<script>
+const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+sizes.forEach(size => {
+    canvas.width = size;
+    canvas.height = size;
+    
+    // Gradient background
+    const gradient = ctx.createLinearGradient(0, 0, size, size);
+    gradient.addColorStop(0, '#7c3aed');
+    gradient.addColorStop(0.5, '#ec4899');
+    gradient.addColorStop(1, '#06b6d4');
+    
+    // Background with rounded corners
+    ctx.fillStyle = gradient;
+    ctx.roundRect = function(x, y, w, h, r) {
+        if (w < 2 * r) r = w / 2;
+        if (h < 2 * r) r = h / 2;
+        this.beginPath();
+        this.moveTo(x+r, y);
+        this.arcTo(x+w, y,   x+w, y+h, r);
+        this.arcTo(x+w, y+h, x,   y+h, r);
+        this.arcTo(x,   y+h, x,   y,   r);
+        this.arcTo(x,   y,   x+w, y,   r);
+        this.closePath();
+        return this;
+    };
+    
+    ctx.roundRect(0, 0, size, size, size * 0.2);
+    ctx.fill();
+    
+    // Hospital cross (white)
+    ctx.fillStyle = 'white';
+    const crossSize = size * 0.4;
+    const crossThickness = crossSize * 0.4;
+    const centerX = size / 2;
+    const centerY = size / 2;
+    
+    // Vertical bar
+    ctx.roundRect(centerX - crossThickness/2, centerY - crossSize/2, crossThickness, crossSize, crossThickness * 0.2);
+    ctx.fill();
+    
+    // Horizontal bar
+    ctx.roundRect(centerX - crossSize/2, centerY - crossThickness/2, crossSize, crossThickness, crossThickness * 0.2);
+    ctx.fill();
+    
+    // Inner cross (purple)
+    ctx.fillStyle = '#7c3aed';
+    const innerThickness = crossThickness * 0.4;
+    
+    // Inner vertical
+    ctx.roundRect(centerX - innerThickness/2, centerY - crossSize/2 + crossThickness * 0.15, innerThickness, crossSize - crossThickness * 0.3, innerThickness * 0.2);
+    ctx.fill();
+    
+    // Inner horizontal  
+    ctx.roundRect(centerX - crossSize/2 + crossThickness * 0.15, centerY - innerThickness/2, crossSize - crossThickness * 0.3, innerThickness, innerThickness * 0.2);
+    ctx.fill();
+    
+    // Save as data URL and trigger download
+    const link = document.createElement('a');
+    link.download = `icons/icon-${size}x${size}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+    
+    console.log(`Generated ${size}x${size} icon`);
+});
+</script>
+</body>
+</html>
