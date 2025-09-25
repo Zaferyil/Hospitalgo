@@ -879,12 +879,12 @@ const UltraModernHospitalApp = () => {
     );
   });
 
-  // 📋 DÜZELTME: Gerçek Excel Datei Download
+  // 📋 DÜZELTME: Excel CSV Export için Almanca format
   const exportToExcel = async () => {
     try {
       console.log('🏥 Excel Export wird gestartet...');
 
-      // CSV Daten vorbereiten (Deutsche Spaltenköpfe)
+      // CSV Daten vorbereiten (Deutsche Spaltenköpfe) - SEMICOLON für deutsche Excel
       const csvData = [
         ['Produkt Name', 'Kategorie', 'Bestellmenge', 'Einheit', 'Aktueller Bestand', 'Mindestbestand', 'Status', 'Priorität', 'Bestelldatum', 'Lieferant'],
         ...filteredOrders.map(order => [
@@ -901,17 +901,26 @@ const UltraModernHospitalApp = () => {
         ])
       ];
 
-      // CSV String erstellen
+      // CSV String erstellen - SEMICOLON als Delimiter für Deutsche Excel
       const csvString = csvData.map(row =>
-        row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(',')
-      ).join('\n');
+        row.map(field => {
+          const stringField = String(field);
+          // Escaping für Anführungszeichen und Semikolons
+          if (stringField.includes(';') || stringField.includes('"') || stringField.includes('\n')) {
+            return `"${stringField.replace(/"/g, '""')}"`;
+          }
+          return stringField;
+        }).join(';') // SEMICOLON als Delimiter
+      ).join('\r\n'); // Windows Line Endings
 
       // BOM für deutsche Umlaute hinzufügen
       const BOM = '\uFEFF';
       const csvContent = BOM + csvString;
 
       // Blob erstellen und Download auslösen
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob([csvContent], { 
+        type: 'text/csv;charset=utf-8;' 
+      });
       const link = document.createElement('a');
       
       if (navigator.msSaveBlob) { // IE 10+
@@ -939,12 +948,14 @@ const UltraModernHospitalApp = () => {
         <div style="background: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 500px;">
           <h2 style="color: #667eea; margin-bottom: 15px;">✅ Excel-Datei heruntergeladen!</h2>
           <p style="margin-bottom: 20px; color: #333;">
-            Die Bestellungsdaten wurden erfolgreich als CSV-Datei gespeichert.<br>
-            <strong>Dateiname:</strong> HospitalGo_Bestellungen.csv
+            Die Bestellungsdaten wurden erfolgreich als Excel-kompatible CSV-Datei gespeichert.<br>
+            <strong>Dateiname:</strong> HospitalGo_Bestellungen.csv<br>
+            <strong>Format:</strong> Deutsche Excel-Kompatibilität (Semikolon-getrennt)
           </p>
           <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin: 15px 0; font-size: 12px;">
             📊 ${filteredOrders.length} Bestellungen exportiert<br>
-            📋 Bereit für Excel, LibreOffice oder Google Sheets
+            📋 Optimiert für deutsche Excel-Version<br>
+            🔧 Jede Spalte wird korrekt getrennt angezeigt
           </div>
           <button onclick="this.parentElement.parentElement.remove()" 
                   style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
@@ -954,7 +965,7 @@ const UltraModernHospitalApp = () => {
       `;
 
       document.body.appendChild(modal);
-      console.log('✅ CSV-Datei erfolgreich heruntergeladen');
+      console.log('✅ CSV-Datei mit Semikolon-Delimiter erfolgreich heruntergeladen');
 
     } catch (error) {
       console.error('❌ Excel Export Fehler:', error);
