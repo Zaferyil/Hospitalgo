@@ -979,30 +979,30 @@ const UltraModernHospitalApp = () => {
         {/* Add/Edit Form Modal */}
         {showAddForm && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-              <h3 className="text-2xl font-black text-white mb-6">
+            <div className="bg-white/10 backdrop-blur-xl rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-2xl border border-white/20 w-full max-w-4xl max-h-[95vh] overflow-y-auto">
+              <h3 className="text-xl md:text-2xl font-black text-white mb-4 md:mb-6">
                 {editingOrder ? '✏️ Bestellung bearbeiten' : '➕ Neue Bestellung hinzufügen'}
               </h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                <div className="md:col-span-2 lg:col-span-1">
                   <label className="block text-white/80 text-sm font-bold mb-2">Produkt Name *</label>
                   <input
                     type="text"
                     value={newOrder.produktName}
                     onChange={(e) => setNewOrder({...newOrder, produktName: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white placeholder-white/60"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
                     placeholder="z.B. Mineralwasser 1,5L"
                     data-testid="product-name-input"
                   />
                 </div>
 
-                <div>
+                <div className="md:col-span-2 lg:col-span-1">
                   <label className="block text-white/80 text-sm font-bold mb-2">Kategorie *</label>
                   <select
                     value={newOrder.kategorie}
                     onChange={(e) => setNewOrder({...newOrder, kategorie: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white text-sm md:text-base"
                     data-testid="category-select"
                   >
                     <option value="" className="bg-gray-800">Kategorie wählen</option>
@@ -1018,7 +1018,7 @@ const UltraModernHospitalApp = () => {
                     type="number"
                     value={newOrder.menge}
                     onChange={(e) => setNewOrder({...newOrder, menge: parseInt(e.target.value) || 0})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-green-500/50 focus:border-green-400 transition-all duration-300 text-white placeholder-white/60"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-green-500/50 focus:border-green-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
                     placeholder="0"
                     data-testid="quantity-input"
                   />
@@ -1030,8 +1030,8 @@ const UltraModernHospitalApp = () => {
                     type="text"
                     value={newOrder.einheit}
                     onChange={(e) => setNewOrder({...newOrder, einheit: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 text-white placeholder-white/60"
-                    placeholder="z.B. Flaschen, Stück, Packungen"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
+                    placeholder="z.B. Flaschen, Stück"
                     data-testid="unit-input"
                   />
                 </div>
@@ -1042,7 +1042,7 @@ const UltraModernHospitalApp = () => {
                     type="number"
                     value={newOrder.anfangsBestand}
                     onChange={(e) => setNewOrder({...newOrder, anfangsBestand: parseInt(e.target.value) || 0})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-orange-500/50 focus:border-orange-400 transition-all duration-300 text-white placeholder-white/60"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-orange-500/50 focus:border-orange-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
                     placeholder="0"
                     data-testid="initial-stock-input"
                   />
@@ -1054,7 +1054,7 @@ const UltraModernHospitalApp = () => {
                     type="number"
                     value={newOrder.verteilteAnzahl}
                     onChange={(e) => setNewOrder({...newOrder, verteilteAnzahl: parseInt(e.target.value) || 0})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-red-500/50 focus:border-red-400 transition-all duration-300 text-white placeholder-white/60"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-red-500/50 focus:border-red-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
                     placeholder="0"
                     data-testid="distributed-quantity-input"
                   />
@@ -1066,7 +1066,7 @@ const UltraModernHospitalApp = () => {
                     type="number"
                     value={newOrder.mindestBestand}
                     onChange={(e) => setNewOrder({...newOrder, mindestBestand: parseInt(e.target.value) || 0})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-400 transition-all duration-300 text-white placeholder-white/60"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
                     placeholder="0"
                     data-testid="minimum-stock-input"
                   />
@@ -1078,7 +1078,7 @@ const UltraModernHospitalApp = () => {
                     type="number"
                     value={newOrder.maxBestand}
                     onChange={(e) => setNewOrder({...newOrder, maxBestand: parseInt(e.target.value) || 100})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-pink-500/50 focus:border-pink-400 transition-all duration-300 text-white placeholder-white/60"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-pink-500/50 focus:border-pink-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
                     placeholder="100"
                     data-testid="maximum-stock-input"
                   />
@@ -1089,7 +1089,7 @@ const UltraModernHospitalApp = () => {
                   <select
                     value={newOrder.status}
                     onChange={(e) => setNewOrder({...newOrder, status: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-indigo-500/50 focus:border-indigo-400 transition-all duration-300 text-white"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-indigo-500/50 focus:border-indigo-400 transition-all duration-300 text-white text-sm md:text-base"
                     data-testid="status-select"
                   >
                     {statusOptions.map(s => (
@@ -1103,7 +1103,7 @@ const UltraModernHospitalApp = () => {
                   <select
                     value={newOrder.prioritaet}
                     onChange={(e) => setNewOrder({...newOrder, prioritaet: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white text-sm md:text-base"
                     data-testid="priority-select"
                   >
                     {prioritaetOptions.map(p => (
@@ -1118,8 +1118,8 @@ const UltraModernHospitalApp = () => {
                     type="text"
                     value={newOrder.lieferant}
                     onChange={(e) => setNewOrder({...newOrder, lieferant: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-teal-500/50 focus:border-teal-400 transition-all duration-300 text-white placeholder-white/60"
-                    placeholder="z.B. Medizin Großhandel GmbH"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-teal-500/50 focus:border-teal-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
+                    placeholder="z.B. Medizin Großhandel"
                     data-testid="supplier-input"
                   />
                 </div>
@@ -1130,35 +1130,35 @@ const UltraModernHospitalApp = () => {
                     type="date"
                     value={newOrder.lieferdatum || ''}
                     onChange={(e) => setNewOrder({...newOrder, lieferdatum: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white text-sm md:text-base"
                     data-testid="delivery-date-input"
                   />
                 </div>
               </div>
 
-              <div className="mt-6">
+              <div className="mt-4 md:mt-6">
                 <label className="block text-white/80 text-sm font-bold mb-2">Notizen</label>
                 <textarea
                   value={newOrder.notizen}
                   onChange={(e) => setNewOrder({...newOrder, notizen: e.target.value})}
-                  className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white placeholder-white/60 h-24 resize-none"
+                  className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white placeholder-white/60 h-20 md:h-24 resize-none text-sm md:text-base"
                   placeholder="Zusätzliche Informationen..."
                   data-testid="notes-textarea"
                 />
               </div>
 
               {/* Berechneter Bestand Anzeige */}
-              <div className="mt-6 p-4 bg-white/5 backdrop-blur-sm rounded-2xl">
-                <h4 className="text-white font-bold mb-2">📊 Berechneter aktueller Bestand:</h4>
-                <p className="text-2xl font-black text-cyan-400">
+              <div className="mt-4 md:mt-6 p-3 md:p-4 bg-white/5 backdrop-blur-sm rounded-xl md:rounded-2xl">
+                <h4 className="text-white font-bold mb-2 text-sm md:text-base">📊 Berechneter aktueller Bestand:</h4>
+                <p className="text-xl md:text-2xl font-black text-cyan-400">
                   {newOrder.aktuellerBestand} {newOrder.bestandseinheit || newOrder.einheit || 'Stück'}
                 </p>
-                <p className="text-white/60 text-sm mt-1">
+                <p className="text-white/60 text-xs md:text-sm mt-1">
                   Formel: Anfangsbestand ({newOrder.anfangsBestand}) + Neue Bestellung ({newOrder.menge}) - Verteilte Anzahl ({newOrder.verteilteAnzahl})
                 </p>
               </div>
 
-              <div className="flex justify-end space-x-4 mt-8">
+              <div className="flex flex-col md:flex-row justify-end space-y-3 md:space-y-0 md:space-x-4 mt-6 md:mt-8">
                 <button
                   onClick={() => {
                     setShowAddForm(false);
@@ -1185,14 +1185,14 @@ const UltraModernHospitalApp = () => {
                       erhalteneBestellungen: 0
                     });
                   }}
-                  className="px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105"
+                  className="w-full md:w-auto px-4 md:px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white rounded-xl md:rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 text-sm md:text-base"
                   data-testid="cancel-button"
                 >
                   ❌ Abbrechen
                 </button>
                 <button
                   onClick={editingOrder ? handleUpdateOrder : handleAddOrder}
-                  className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105"
+                  className="w-full md:w-auto px-4 md:px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl md:rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 text-sm md:text-base"
                   data-testid="save-button"
                 >
                   {editingOrder ? '💾 Aktualisieren' : '➕ Hinzufügen'}
