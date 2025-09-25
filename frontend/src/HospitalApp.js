@@ -36,25 +36,25 @@ const ReportsPage = ({ orders, onBack }) => {
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 md:space-y-8">
       {/* Header */}
-      <div className="backdrop-blur-xl bg-white/10 rounded-3xl p-8 shadow-2xl border border-white/20">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-4xl font-black bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+      <div className="backdrop-blur-xl bg-white/10 rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-2xl border border-white/20">
+        <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0 mb-4 md:mb-6">
+          <h2 className="text-2xl md:text-4xl font-black bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent text-center md:text-left">
             📊 Bestellungen & Verbrauch Berichte
           </h2>
           <button
             onClick={onBack}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-3 rounded-2xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg"
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg w-full md:w-auto"
           >
             <span>⬅️ Zurück</span>
           </button>
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-4 mb-6">
+        <div className="flex flex-col space-y-3 md:flex-row md:flex-wrap md:gap-4 md:space-y-0 mb-4 md:mb-6">
           <select
-            className="px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white font-medium"
+            className="w-full md:w-auto px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white font-medium text-sm md:text-base"
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value)}
           >
@@ -66,14 +66,14 @@ const ReportsPage = ({ orders, onBack }) => {
           </select>
 
           <select
-            className="px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white font-medium"
+            className="w-full md:w-auto px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white font-medium text-sm md:text-base"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
             <option value="" className="bg-gray-800 text-white">Alle Kategorien</option>
             <option value="Getränke" className="bg-gray-800 text-white">Getränke</option>
             <option value="Hygieneartikel" className="bg-gray-800 text-white">Hygieneartikel</option>
-            <option value="Medizinische Verbrauchsmaterialien" className="bg-gray-800 text-white">Medizinische Verbrauchsmaterialien</option>
+            <option value="Medizinische Verbrauchsmaterialien" className="bg-gray-800 text-white">Med. Verbrauchsmat.</option>
             <option value="Reinigungsmittel" className="bg-gray-800 text-white">Reinigungsmittel</option>
             <option value="Büromaterial" className="bg-gray-800 text-white">Büromaterial</option>
             <option value="Lebensmittel" className="bg-gray-800 text-white">Lebensmittel</option>
@@ -82,59 +82,59 @@ const ReportsPage = ({ orders, onBack }) => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-br from-blue-400 via-purple-500 to-blue-600 rounded-3xl p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <div className="bg-gradient-to-br from-blue-400 via-purple-500 to-blue-600 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
           <div className="flex items-center justify-between text-white">
             <div>
-              <p className="text-white/90 text-sm font-bold uppercase tracking-wider">Gesamte Bestellungen</p>
-              <p className="text-3xl font-black">{totalBestellungen}</p>
+              <p className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-wider">Gesamte Bestellungen</p>
+              <p className="text-2xl md:text-3xl font-black">{totalBestellungen}</p>
               <p className="text-white/80 text-xs font-semibold">Letzte {dateRange} Tage</p>
             </div>
-            <Package className="h-12 w-12 text-white/80" />
+            <Package className="h-8 md:h-12 w-8 md:w-12 text-white/80" />
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-orange-400 via-red-500 to-orange-600 rounded-3xl p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
+        <div className="bg-gradient-to-br from-orange-400 via-red-500 to-orange-600 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
           <div className="flex items-center justify-between text-white">
             <div>
-              <p className="text-white/90 text-sm font-bold uppercase tracking-wider">Verteilte Menge</p>
-              <p className="text-3xl font-black">{totalVerteilte}</p>
+              <p className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-wider">Verteilte Menge</p>
+              <p className="text-2xl md:text-3xl font-black">{totalVerteilte}</p>
               <p className="text-white/80 text-xs font-semibold">Verbrauch</p>
             </div>
-            <TrendingUp className="h-12 w-12 text-white/80" />
+            <TrendingUp className="h-8 md:h-12 w-8 md:w-12 text-white/80" />
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-emerald-400 via-green-500 to-emerald-600 rounded-3xl p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
+        <div className="bg-gradient-to-br from-emerald-400 via-green-500 to-emerald-600 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
           <div className="flex items-center justify-between text-white">
             <div>
-              <p className="text-white/90 text-sm font-bold uppercase tracking-wider">Aktueller Bestand</p>
-              <p className="text-3xl font-black">{totalAktuell}</p>
+              <p className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-wider">Aktueller Bestand</p>
+              <p className="text-2xl md:text-3xl font-black">{totalAktuell}</p>
               <p className="text-white/80 text-xs font-semibold">Verfügbar</p>
             </div>
-            <BarChart3 className="h-12 w-12 text-white/80" />
+            <BarChart3 className="h-8 md:h-12 w-8 md:w-12 text-white/80" />
           </div>
         </div>
       </div>
 
       {/* Category Analysis */}
-      <div className="backdrop-blur-xl bg-white/10 rounded-3xl p-8 shadow-2xl border border-white/20">
-        <h3 className="text-2xl font-black text-white mb-6">📈 Kategorie Analyse</h3>
-        <div className="space-y-4">
+      <div className="backdrop-blur-xl bg-white/10 rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-2xl border border-white/20">
+        <h3 className="text-xl md:text-2xl font-black text-white mb-4 md:mb-6">📈 Kategorie Analyse</h3>
+        <div className="space-y-3 md:space-y-4">
           {Object.entries(kategorieStats).map(([kategorie, stats]) => (
-            <div key={kategorie} className="bg-white/5 backdrop-blur-sm rounded-2xl p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h4 className="text-lg font-bold text-white">{kategorie}</h4>
-                <div className="flex space-x-4 text-sm text-white/80">
+            <div key={kategorie} className="bg-white/5 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-6">
+              <div className="flex flex-col space-y-2 md:flex-row md:justify-between md:items-center md:space-y-0 mb-3 md:mb-4">
+                <h4 className="text-sm md:text-lg font-bold text-white">{kategorie}</h4>
+                <div className="flex flex-wrap gap-2 md:space-x-4 text-xs md:text-sm text-white/80">
                   <span>📦 Bestellt: {stats.bestellt}</span>
                   <span>🚀 Verteilt: {stats.verteilt}</span>
                   <span>📊 Bestand: {stats.bestand}</span>
                 </div>
               </div>
               <div className="relative">
-                <div className="w-full bg-white/20 rounded-full h-3">
+                <div className="w-full bg-white/20 rounded-full h-2 md:h-3">
                   <div
-                    className="bg-gradient-to-r from-cyan-400 to-blue-500 h-3 rounded-full transition-all duration-1000"
+                    className="bg-gradient-to-r from-cyan-400 to-blue-500 h-2 md:h-3 rounded-full transition-all duration-1000"
                     style={{ width: `${Math.min((stats.verteilt / (stats.bestellt || 1)) * 100, 100)}%` }}
                   ></div>
                 </div>
@@ -148,20 +148,20 @@ const ReportsPage = ({ orders, onBack }) => {
       </div>
 
       {/* Detailed Table */}
-      <div className="backdrop-blur-xl bg-white/10 rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-        <div className="p-6 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600">
-          <h3 className="text-xl font-black text-white">📋 Detaillierte Übersicht ({dateRange} Tage)</h3>
+      <div className="backdrop-blur-xl bg-white/10 rounded-2xl md:rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+        <div className="p-4 md:p-6 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600">
+          <h3 className="text-lg md:text-xl font-black text-white">📋 Detaillierte Übersicht ({dateRange} Tage)</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-white/5">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-bold text-white">Produkt</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-white">Kategorie</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-white">Bestellt</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-white">Verteilt</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-white">Bestand</th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-white">Verbrauchsrate</th>
+                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white">Produkt</th>
+                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white hidden md:table-cell">Kategorie</th>
+                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white">Bestellt</th>
+                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white">Verteilt</th>
+                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white">Bestand</th>
+                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-bold text-white hidden sm:table-cell">Rate</th>
               </tr>
             </thead>
             <tbody>
@@ -169,13 +169,18 @@ const ReportsPage = ({ orders, onBack }) => {
                 const verbrauchsrate = order.menge > 0 ? ((order.verteilteAnzahl || 0) / order.menge * 100) : 0;
                 return (
                   <tr key={order.id} className={index % 2 === 0 ? 'bg-white/5' : 'bg-transparent'}>
-                    <td className="px-6 py-4 text-white font-medium">{order.produktName}</td>
-                    <td className="px-6 py-4 text-white/80">{order.kategorie}</td>
-                    <td className="px-6 py-4 text-white font-bold">{order.menge} {order.einheit}</td>
-                    <td className="px-6 py-4 text-white font-bold">{order.verteilteAnzahl || 0} {order.verteilungseinheit || order.einheit}</td>
-                    <td className="px-6 py-4 text-white font-bold">{order.aktuellerBestand} {order.bestandseinheit || order.einheit}</td>
-                    <td className="px-6 py-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                    <td className="px-3 md:px-6 py-3 md:py-4 text-white font-medium text-xs md:text-sm">
+                      <div>
+                        <div>{order.produktName}</div>
+                        <div className="text-xs text-white/60 md:hidden">{order.kategorie}</div>
+                      </div>
+                    </td>
+                    <td className="px-3 md:px-6 py-3 md:py-4 text-white/80 text-xs md:text-sm hidden md:table-cell">{order.kategorie}</td>
+                    <td className="px-3 md:px-6 py-3 md:py-4 text-white font-bold text-xs md:text-sm">{order.menge} {order.einheit}</td>
+                    <td className="px-3 md:px-6 py-3 md:py-4 text-white font-bold text-xs md:text-sm">{order.verteilteAnzahl || 0} {order.verteilungseinheit || order.einheit}</td>
+                    <td className="px-3 md:px-6 py-3 md:py-4 text-white font-bold text-xs md:text-sm">{order.aktuellerBestand} {order.bestandseinheit || order.einheit}</td>
+                    <td className="px-3 md:px-6 py-3 md:py-4 hidden sm:table-cell">
+                      <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-bold ${
                         verbrauchsrate > 80 ? 'bg-red-500/80 text-white' :
                           verbrauchsrate > 50 ? 'bg-yellow-500/80 text-white' :
                             'bg-green-500/80 text-white'
