@@ -61,7 +61,7 @@ const ReportsPage = ({ orders, onBack }) => {
     kategorieStats[order.kategorie].bestand += order.aktuellerBestand || 0;
   });
 
-  // Excel Export für Reports
+  // Excel Export für Reports - DÜZELTME: Semikolon Delimiter
   const exportReportsToExcel = async () => {
     try {
       console.log('📊 Reports Excel Export wird gestartet...');
@@ -70,7 +70,7 @@ const ReportsPage = ({ orders, onBack }) => {
         ? `${startDate} bis ${endDate}` 
         : `Letzte ${dateRange} Tage`;
 
-      // CSV Daten vorbereiten
+      // CSV Daten vorbereiten - SEMICOLON für deutsche Excel
       const csvData = [
         ['HospitalGo Berichte - ' + dateRangeText],
         [''],
@@ -93,17 +93,26 @@ const ReportsPage = ({ orders, onBack }) => {
         })
       ];
 
-      // CSV String erstellen
+      // CSV String erstellen - SEMICOLON als Delimiter für Deutsche Excel
       const csvString = csvData.map(row =>
-        row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(',')
-      ).join('\n');
+        row.map(field => {
+          const stringField = String(field);
+          // Escaping für Anführungszeichen und Semikolons
+          if (stringField.includes(';') || stringField.includes('"') || stringField.includes('\n')) {
+            return `"${stringField.replace(/"/g, '""')}"`;
+          }
+          return stringField;
+        }).join(';') // SEMICOLON als Delimiter
+      ).join('\r\n'); // Windows Line Endings
 
       // BOM für deutsche Umlaute hinzufügen
       const BOM = '\uFEFF';
       const csvContent = BOM + csvString;
 
       // Blob erstellen und Download auslösen
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob([csvContent], { 
+        type: 'text/csv;charset=utf-8;' 
+      });
       const link = document.createElement('a');
       const filename = `HospitalGo_Berichte_${dateRangeText.replace(/\s+/g, '_')}.csv`;
       
@@ -132,13 +141,15 @@ const ReportsPage = ({ orders, onBack }) => {
         <div style="background: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 500px;">
           <h2 style="color: #667eea; margin-bottom: 15px;">✅ Berichte Excel-Datei heruntergeladen!</h2>
           <p style="margin-bottom: 20px; color: #333;">
-            Die Berichtsdaten wurden erfolgreich als CSV-Datei gespeichert.<br>
+            Die Berichtsdaten wurden erfolgreich als Excel-kompatible CSV-Datei gespeichert.<br>
             <strong>Zeitraum:</strong> ${dateRangeText}<br>
-            <strong>Dateiname:</strong> ${filename}
+            <strong>Dateiname:</strong> ${filename}<br>
+            <strong>Format:</strong> Deutsche Excel-Kompatibilität (Semikolon-getrennt)
           </p>
           <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin: 15px 0; font-size: 12px;">
             📊 ${filteredReports.length} Berichte exportiert<br>
-            📋 Bereit für Excel, LibreOffice oder Google Sheets
+            📋 Optimiert für deutsche Excel-Version<br>
+            🔧 Jede Spalte wird korrekt getrennt angezeigt
           </div>
           <button onclick="this.parentElement.parentElement.remove()" 
                   style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
@@ -148,7 +159,7 @@ const ReportsPage = ({ orders, onBack }) => {
       `;
 
       document.body.appendChild(modal);
-      console.log('✅ Reports CSV-Datei erfolgreich heruntergeladen');
+      console.log('✅ Reports CSV-Datei mit Semikolon-Delimiter erfolgreich heruntergeladen');
 
     } catch (error) {
       console.error('❌ Reports Excel Export Fehler:', error);
