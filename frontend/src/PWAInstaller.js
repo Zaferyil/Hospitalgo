@@ -6,20 +6,20 @@ const PWAInstaller = () => {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
 
   useEffect(() => {
-    // Register service worker
+    // Service Worker registrieren
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
           .then((registration) => {
-            console.log('✅ SW registered: ', registration);
+            console.log('✅ SW registriert: ', registration);
           })
           .catch((registrationError) => {
-            console.log('❌ SW registration failed: ', registrationError);
+            console.log('❌ SW Registrierung fehlgeschlagen: ', registrationError);
           });
       });
     }
 
-    // Listen for the beforeinstallprompt event
+    // Auf beforeinstallprompt Event hören
     const handleBeforeInstallPrompt = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
@@ -40,9 +40,9 @@ const PWAInstaller = () => {
     const { outcome } = await deferredPrompt.userChoice;
     
     if (outcome === 'accepted') {
-      console.log('✅ User accepted the install prompt');
+      console.log('✅ Benutzer hat die Installation akzeptiert');
     } else {
-      console.log('❌ User dismissed the install prompt');
+      console.log('❌ Benutzer hat die Installation abgelehnt');
     }
     
     setDeferredPrompt(null);
@@ -63,7 +63,7 @@ const PWAInstaller = () => {
           <div className="flex items-center space-x-2">
             <Smartphone className="h-6 w-6 text-purple-600" />
             <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-              Uygulamayı Yükle
+              App installieren
             </h3>
           </div>
           <button
@@ -75,7 +75,7 @@ const PWAInstaller = () => {
         </div>
         
         <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-          HospitalGo'yu telefonunuza yükleyerek daha hızlı erişim sağlayın!
+          Installieren Sie HospitalGo auf Ihrem Gerät für schnelleren Zugriff!
         </p>
         
         <div className="flex space-x-2">
@@ -84,14 +84,14 @@ const PWAInstaller = () => {
             className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold flex items-center justify-center space-x-2 hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
           >
             <Download className="h-4 w-4" />
-            <span>Yükle</span>
+            <span>Installieren</span>
           </button>
           
           <button
             onClick={handleDismiss}
             className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium"
           >
-            Şimdi Değil
+            Später
           </button>
         </div>
       </div>

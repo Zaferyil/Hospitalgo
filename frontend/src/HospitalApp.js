@@ -3,11 +3,11 @@ import { Plus, Search, Download, FileText, Trash2, Edit, Package, Calendar, Tren
 import PWAInstaller from './PWAInstaller';
 
 const ReportsPage = ({ orders, onBack }) => {
-  console.log('🔍 ReportsPage render ediliyor!');
-  console.log('📊 Orders data:', orders);
-  console.log('🔢 Orders sayısı:', orders ? orders.length : 'undefined');
+  console.log('🔍 ReportsPage wird gerendert!');
+  console.log('📊 Bestelldaten:', orders);
+  console.log('🔢 Anzahl Bestellungen:', orders ? orders.length : 'undefiniert');
 
-  const [dateRange, setDateRange] = useState('30'); // days
+  const [dateRange, setDateRange] = useState('30'); // Tage
   const [selectedCategory, setSelectedCategory] = useState('');
 
   const today = new Date();
@@ -207,7 +207,7 @@ const UltraModernHospitalApp = () => {
       kategorie: 'Getränke',
       menge: 50,
       einheit: 'Flaschen',
-      lieferant: '',
+      lieferant: 'Getränke Großhandel GmbH',
       bestelldatum: '2025-08-15',
       lieferdatum: '2025-08-20',
       status: 'Bestellt',
@@ -226,7 +226,7 @@ const UltraModernHospitalApp = () => {
       kategorie: 'Hygieneartikel',
       menge: 100,
       einheit: 'Rollen',
-      lieferant: '',
+      lieferant: 'Hygiene Service AG',
       bestelldatum: '2025-08-16',
       lieferdatum: '2025-08-21',
       status: 'Geliefert',
@@ -245,7 +245,7 @@ const UltraModernHospitalApp = () => {
       kategorie: 'Hygieneartikel',
       menge: 30,
       einheit: 'Flaschen',
-      lieferant: '',
+      lieferant: 'MedCare Supplies',
       bestelldatum: '2025-08-17',
       lieferdatum: '2025-08-22',
       status: 'Ausstehend',
@@ -295,20 +295,20 @@ const UltraModernHospitalApp = () => {
     erhalteneBestellungen: 0
   });
 
-  // 🔄 Otomatik hesaplama için useEffect
+  // 🔄 Automatische Berechnung mit useEffect
   useEffect(() => {
     const anfangsBestand = parseInt(newOrder.anfangsBestand.toString()) || 0;
     const neueBestellung = parseInt(newOrder.menge.toString()) || 0;
     const verteilteAnzahl = parseInt(newOrder.verteilteAnzahl.toString()) || 0;
 
     if (editingOrder) {
-      // Düzenleme modunda: mevcut bestand kullan
+      // Bearbeitungsmodus: vorhandenen Bestand verwenden
       const currentOrder = orders.find(o => o.id === editingOrder);
       const vorherigerBestand = currentOrder ? currentOrder.aktuellerBestand : 0;
       const berechneterBestand = vorherigerBestand + neueBestellung - verteilteAnzahl;
       setNewOrder(prev => ({ ...prev, aktuellerBestand: berechneterBestand }));
     } else {
-      // Yeni kayıt modunda: başlangıç + bestellung - verteilt
+      // Neuer Eintragsmodus: Anfang + Bestellung - verteilt
       const berechneterBestand = anfangsBestand + neueBestellung - verteilteAnzahl;
       setNewOrder(prev => ({ ...prev, aktuellerBestand: berechneterBestand }));
     }
@@ -383,7 +383,7 @@ const UltraModernHospitalApp = () => {
           menge: neueBestellmenge,
           mindestBestand: parseInt(newOrder.mindestBestand.toString()) || 0,
           maxBestand: parseInt(newOrder.maxBestand.toString()) || 100,
-          aktuellerBestand: finalBestand, // 📦 Basit Formel
+          aktuellerBestand: finalBestand, // 📦 Einfache Formel
           verteilteAnzahl: verteilteAnzahl,
           // Ältere Felder für Kompatibilität
           anfangsBestand: vorherigerBestand,
@@ -431,13 +431,14 @@ const UltraModernHospitalApp = () => {
     );
   });
 
+  // 📋 DÜZELTME: Gerçek Excel Datei Download
   const exportToExcel = async () => {
     try {
-      console.log('🏥 Hastane Excel Export Başlatılıyor...');
+      console.log('🏥 Excel Export wird gestartet...');
 
-      // CSV formatında veri hazırla
+      // CSV Daten vorbereiten (Deutsche Spaltenköpfe)
       const csvData = [
-        ['Ürün Adı', 'Kategorie', 'Bestell Menge', 'Einheit', 'Aktueller Bestand', 'Mindest Bestand', 'Status', 'Priorität', 'Bestelldatum'],
+        ['Produkt Name', 'Kategorie', 'Bestellmenge', 'Einheit', 'Aktueller Bestand', 'Mindestbestand', 'Status', 'Priorität', 'Bestelldatum', 'Lieferant'],
         ...filteredOrders.map(order => [
           order.produktName || '',
           order.kategorie || '',
@@ -447,72 +448,200 @@ const UltraModernHospitalApp = () => {
           order.mindestBestand || '',
           order.status || '',
           order.prioritaet || '',
-          order.bestelldatum || ''
+          order.bestelldatum || '',
+          order.lieferant || ''
         ])
       ];
 
-      // CSV string oluştur
+      // CSV String erstellen
       const csvString = csvData.map(row =>
         row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(',')
       ).join('\n');
 
-      // Clipboard API kullan (modern approach)
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(csvString);
+      // BOM für deutsche Umlaute hinzufügen
+      const BOM = '\uFEFF';
+      const csvContent = BOM + csvString;
 
-        // Modal göster
-        const modal = document.createElement('div');
-        modal.style.cssText = `
-          position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-          background: rgba(0,0,0,0.8); z-index: 10000; display: flex; 
-          align-items: center; justify-content: center; font-family: Arial;
-        `;
-
-        modal.innerHTML = `
-          <div style="background: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 500px;">
-            <h2 style="color: #667eea; margin-bottom: 15px;">✅ Excel Verisi Hazır!</h2>
-            <p style="margin-bottom: 20px; color: #333;">
-              Hastane bestellungen verisi panoya kopyalandı.<br>
-              <strong>Excel'i açın → Ctrl+V yapın</strong>
-            </p>
-            <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin: 15px 0; font-size: 12px;">
-              📊 ${filteredOrders.length} adet sipariş<br>
-              📋 CSV formatında hazırlandı
-            </div>
-            <button onclick="this.parentElement.parentElement.remove()" 
-                    style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
-              Tamam
-            </button>
-          </div>
-        `;
-
-        document.body.appendChild(modal);
-        console.log('✅ CSV verisi panoya kopyalandı');
-
+      // Blob erstellen und Download auslösen
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      
+      if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, 'HospitalGo_Bestellungen.csv');
       } else {
-        // Fallback: Console'a yazdır
-        console.log('=== HASTANE EXCEL DATA START ===');
-        console.log(csvString);
-        console.log('=== HASTANE EXCEL DATA END ===');
-
-        alert('📋 CSV verisi console\'a yazdırıldı!\n\nF12 → Console → Verileri seçin → Kopyalayın → Excel\'e yapıştırın');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = 'HospitalGo_Bestellungen.csv';
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
       }
 
+      // Erfolgsmeldung anzeigen
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        background: rgba(0,0,0,0.8); z-index: 10000; display: flex; 
+        align-items: center; justify-content: center; font-family: Arial;
+      `;
+
+      modal.innerHTML = `
+        <div style="background: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 500px;">
+          <h2 style="color: #667eea; margin-bottom: 15px;">✅ Excel-Datei heruntergeladen!</h2>
+          <p style="margin-bottom: 20px; color: #333;">
+            Die Bestellungsdaten wurden erfolgreich als CSV-Datei gespeichert.<br>
+            <strong>Dateiname:</strong> HospitalGo_Bestellungen.csv
+          </p>
+          <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin: 15px 0; font-size: 12px;">
+            📊 ${filteredOrders.length} Bestellungen exportiert<br>
+            📋 Bereit für Excel, LibreOffice oder Google Sheets
+          </div>
+          <button onclick="this.parentElement.parentElement.remove()" 
+                  style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
+            Schließen
+          </button>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+      console.log('✅ CSV-Datei erfolgreich heruntergeladen');
+
     } catch (error) {
-      console.error('❌ Excel Export Hatası:', error);
-
-      // Basit fallback
-      const simpleData = filteredOrders.map(o =>
-        `${o.produktName}\t${o.kategorie}\t${o.menge}\t${o.aktuellerBestand}\t${o.status}`
-      ).join('\n');
-
-      console.log('FALLBACK DATA:\n', simpleData);
-      alert('📊 Basit format console\'da hazır. F12 → Console\'dan kopyalayın.');
+      console.error('❌ Excel Export Fehler:', error);
+      alert('❌ Fehler beim Excel-Export. Bitte versuchen Sie es erneut.');
     }
   };
 
+  // 📄 DÜZELTME: Gerçek PDF Datei Download
   const exportToPDF = () => {
-    alert('📄 PDF için Ctrl+P (Windows) veya Cmd+P (Mac) kullanın.\n\nTarayıcı print menüsünden "PDF olarak kaydet" seçin.');
+    try {
+      console.log('📄 PDF Export wird gestartet...');
+
+      // HTML-Inhalt für PDF erstellen
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>HospitalGo Bestellungen</title>
+          <style>
+            body { 
+              font-family: Arial, sans-serif; 
+              margin: 20px;
+              color: #333;
+            }
+            h1 { 
+              color: #7c3aed; 
+              text-align: center;
+              margin-bottom: 30px;
+            }
+            .header-info {
+              text-align: center;
+              margin-bottom: 30px;
+              color: #666;
+            }
+            table { 
+              width: 100%; 
+              border-collapse: collapse;
+              margin-top: 20px;
+            }
+            th, td { 
+              border: 1px solid #ddd; 
+              padding: 8px; 
+              text-align: left;
+              font-size: 12px;
+            }
+            th { 
+              background-color: #7c3aed; 
+              color: white;
+              font-weight: bold;
+            }
+            tr:nth-child(even) { 
+              background-color: #f9f9f9; 
+            }
+            .kritisch { color: #dc2626; font-weight: bold; }
+            .hoch { color: #f59e0b; font-weight: bold; }
+            .normal { color: #059669; }
+            .niedrig { color: #6b7280; }
+            .footer {
+              margin-top: 30px;
+              text-align: center;
+              font-size: 10px;
+              color: #666;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>🏥 HospitalGo - Bestellungsübersicht</h1>
+          <div class="header-info">
+            <p>Erstellt am: ${new Date().toLocaleDateString('de-DE')} um ${new Date().toLocaleTimeString('de-DE')}</p>
+            <p>Anzahl Bestellungen: ${filteredOrders.length}</p>
+          </div>
+          
+          <table>
+            <thead>
+              <tr>
+                <th>Produkt</th>
+                <th>Kategorie</th>
+                <th>Menge</th>
+                <th>Einheit</th>
+                <th>Bestand</th>
+                <th>Status</th>
+                <th>Priorität</th>
+                <th>Bestelldatum</th>
+                <th>Lieferant</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${filteredOrders.map(order => `
+                <tr>
+                  <td>${order.produktName}</td>
+                  <td>${order.kategorie}</td>
+                  <td>${order.menge}</td>
+                  <td>${order.einheit}</td>
+                  <td>${order.aktuellerBestand}</td>
+                  <td>${order.status}</td>
+                  <td class="${order.prioritaet.toLowerCase()}">${order.prioritaet}</td>
+                  <td>${new Date(order.bestelldatum).toLocaleDateString('de-DE')}</td>
+                  <td>${order.lieferant || 'N/A'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          
+          <div class="footer">
+            <p>Generiert von HospitalGo - Smart Hospital Solutions</p>
+          </div>
+        </body>
+        </html>
+      `;
+
+      // Neues Fenster öffnen und Druckdialog anzeigen
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      
+      // Warten bis Inhalt geladen ist, dann Druckdialog öffnen
+      printWindow.onload = function() {
+        setTimeout(() => {
+          printWindow.print();
+          
+          // Optional: Fenster nach dem Drucken schließen
+          printWindow.onafterprint = function() {
+            printWindow.close();
+          };
+        }, 500);
+      };
+
+      // Erfolgsmeldung
+      console.log('✅ PDF-Druckdialog geöffnet');
+      
+    } catch (error) {
+      console.error('❌ PDF Export Fehler:', error);
+      alert('❌ Fehler beim PDF-Export. Bitte versuchen Sie es erneut.');
+    }
   };
 
   const totalItems = filteredOrders.reduce((sum, order) => sum + order.menge, 0);
@@ -557,9 +686,8 @@ const UltraModernHospitalApp = () => {
     }
   };
 
-  // DÜZELTME: Burada eksik kalan onClick function'ını tamamlıyorum
   const handleReportsClick = () => {
-    console.log('Berichte butonu tıklandı, showReports:', showReports);
+    console.log('Berichte-Button geklickt, showReports:', showReports);
     setShowReports(!showReports);
   };
 
@@ -986,7 +1114,7 @@ const UltraModernHospitalApp = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 <div className="md:col-span-2 lg:col-span-1">
-                  <label className="block text-white/80 text-sm font-bold mb-2">Produkt Name *</label>
+                  <label className="block text-white/80 text-sm font-bold mb-2">Produktname *</label>
                   <input
                     type="text"
                     value={newOrder.produktName}
@@ -1119,7 +1247,7 @@ const UltraModernHospitalApp = () => {
                     value={newOrder.lieferant}
                     onChange={(e) => setNewOrder({...newOrder, lieferant: e.target.value})}
                     className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-teal-500/50 focus:border-teal-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
-                    placeholder="z.B. Medizin Großhandel"
+                    placeholder="z.B. Medizinischer Großhandel"
                     data-testid="supplier-input"
                   />
                 </div>
