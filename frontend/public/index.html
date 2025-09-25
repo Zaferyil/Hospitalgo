@@ -1,38 +1,145 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="description" content="A product of emergent.sh" />
-        <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-        <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-        <title>Emergent | Fullstack App</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <meta name="theme-color" content="#7c3aed" />
+        <meta name="description" content="HospitalGo - Smart Hospital Solutions. Modern Hospital Management and Inventory System" />
+        
+        <!-- PWA Manifest -->
+        <link rel="manifest" href="/manifest.json" />
+        
+        <!-- Apple PWA Meta Tags -->
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="HospitalGo" />
+        
+        <!-- Apple Touch Icons -->
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
+        
+        <!-- Standard Icons -->
+        <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-72x72.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-72x72.png" />
+        
+        <!-- Windows/Microsoft -->
+        <meta name="msapplication-TileColor" content="#7c3aed" />
+        <meta name="msapplication-TileImage" content="/icons/icon-144x144.png" />
+        
+        <!-- SEO and Social Media -->
+        <meta property="og:title" content="HospitalGo - Smart Hospital Solutions" />
+        <meta property="og:description" content="Modern Hospital Management and Inventory System" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="/icons/icon-512x512.png" />
+        
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="HospitalGo - Smart Hospital Solutions" />
+        <meta name="twitter:description" content="Modern Hospital Management and Inventory System" />
+        <meta name="twitter:image" content="/icons/icon-512x512.png" />
+        
+        <title>HospitalGo - Smart Hospital Solutions</title>
+        
+        <!-- Preload Service Worker -->
+        <link rel="preload" href="/sw.js" as="script" />
+        
+        <style>
+            /* Loading Animation */
+            #loading {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, #1e1b4b 0%, #7c3aed 50%, #ec4899 100%);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                color: white;
+                z-index: 9999;
+                transition: opacity 0.5s ease-out;
+            }
+            
+            .spinner {
+                width: 60px;
+                height: 60px;
+                border: 4px solid rgba(255,255,255,0.3);
+                border-top: 4px solid #ffffff;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin-bottom: 20px;
+            }
+            
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            
+            .loading-text {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                font-size: 18px;
+                font-weight: bold;
+                text-align: center;
+                opacity: 0.9;
+            }
+        </style>
     </head>
     <body>
-        <noscript>You need to enable JavaScript to run this app.</noscript>
+        <!-- Loading Screen -->
+        <div id="loading">
+            <div class="spinner"></div>
+            <div class="loading-text">
+                🚀 HospitalGo wird geladen...<br>
+                <small style="font-size: 14px; opacity: 0.7;">Smart Hospital Solutions</small>
+            </div>
+        </div>
+        
+        <noscript>
+            <div style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
+                <h2>JavaScript ist erforderlich</h2>
+                <p>Sie müssen JavaScript aktivieren, um HospitalGo zu verwenden.</p>
+            </div>
+        </noscript>
+        
         <div id="root"></div>
-        <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+        
+        <!-- PWA Installation Script -->
+        <script>
+            // Hide loading screen when app is ready
+            window.addEventListener('load', () => {
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    setTimeout(() => {
+                        loading.style.opacity = '0';
+                        setTimeout(() => loading.remove(), 500);
+                    }, 1000);
+                }
+            });
+            
+            // PWA Install Banner
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                console.log('💾 PWA installierbar!');
+            });
+            
+            // Handle app installed
+            window.addEventListener('appinstalled', () => {
+                console.log('✅ PWA erfolgreich installiert!');
+                // Optionally, send analytics event
+            });
+            
+            // Update available notification
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    console.log('🔄 Neue Version verfügbar! Seite wird neu geladen...');
+                    window.location.reload();
+                });
+            }
+        </script>
+        
         <a
             id="emergent-badge"
             target="_blank"
@@ -80,6 +187,7 @@
                 </p>
             </div>
         </a>
+        
         <script>
             !(function (t, e) {
                 var o, n, p, r;
@@ -144,7 +252,7 @@
             })(document, window.posthog || []);
             posthog.init("phc_yJW1VjHGGwmCbbrtczfqqNxgBDbhlhOWcdzcIJEOTFE", {
                 api_host: "https://us.i.posthog.com",
-                person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well
+                person_profiles: "identified_only",
             });
         </script>
     </body>
