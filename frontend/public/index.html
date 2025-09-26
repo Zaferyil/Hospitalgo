@@ -106,14 +106,11 @@
         
         <!-- PWA Installation Script -->
         <script>
-            // Hide loading screen when app is ready
-            window.addEventListener('load', () => {
+            // Hide loading screen when app is ready - IMMEDIATE
+            window.addEventListener('DOMContentLoaded', () => {
                 const loading = document.getElementById('loading');
                 if (loading) {
-                    setTimeout(() => {
-                        loading.style.opacity = '0';
-                        setTimeout(() => loading.remove(), 500);
-                    }, 100);  // Reduced delay to 100ms
+                    loading.remove(); // Remove immediately
                 }
             });
             
