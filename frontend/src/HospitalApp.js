@@ -847,36 +847,38 @@ const UltraModernHospitalApp = () => {
     budgetKodu: ''
   });
 
-  // 🚀 PROFESSIONAL CALCULATION ENGINE - Updated for German Stock System
+  // 🧮 SIMPLIFIED CALCULATION ENGINE - Fixed Logic
   useEffect(() => {
     const anfangsBestand = parseInt(newOrder.anfangsBestand.toString()) || 0;
     const neueBestellung = parseInt(newOrder.menge.toString()) || 0;
     const verteilteAnzahl = parseInt(newOrder.verteilteAnzahl.toString()) || 0;
     const mindestBestand = parseInt(newOrder.mindestBestand.toString()) || 0;
 
-    // 📦 STOK HESAPLAMA
+    // 📦 KORREKTE BESTANDSBERECHNUNG
     let berechneterBestand;
     if (editingOrder) {
-      const currentOrder = orders.find(o => o.id === editingOrder);
-      const vorherigerBestand = currentOrder ? currentOrder.aktuellerBestand : 0;
-      berechneterBestand = vorherigerBestand + neueBestellung - verteilteAnzahl;
+      // Beim Bearbeiten: Nur die neue Bestellung zählen
+      berechneterBestand = neueBestellung;
     } else {
-      berechneterBestand = anfangsBestand + neueBestellung - verteilteAnzahl;
+      // Neuer Eintrag: Einfache Logik - nur Bestellmenge
+      berechneterBestand = neueBestellung;
     }
 
-    // 🚨 LAGER STATUS BELIRLEME
+    // 🚨 LAGER STATUS (nur wenn Mindestbestand gesetzt ist)
     let lagerStatus = 'normal';
-    if (berechneterBestand <= mindestBestand * 0.5) {
-      lagerStatus = 'kritisch';
-    } else if (berechneterBestand <= mindestBestand) {
-      lagerStatus = 'niedrig';
-    } else if (berechneterBestand > mindestBestand * 3) {
-      lagerStatus = 'hoch';
+    if (mindestBestand > 0) {
+      if (berechneterBestand <= mindestBestand * 0.5) {
+        lagerStatus = 'kritisch';
+      } else if (berechneterBestand <= mindestBestand) {
+        lagerStatus = 'niedrig';
+      } else if (berechneterBestand > mindestBestand * 3) {
+        lagerStatus = 'hoch';
+      }
     }
 
-    // 🤖 OTOMATİK SİPARİŞ ÖNERİSİ
+    // 🤖 BESTELLEMPFEHLUNG (nur bei niedrigem Bestand)
     let otomatikSiparisOneri = 0;
-    if (berechneterBestand < mindestBestand && mindestBestand > 0) {
+    if (mindestBestand > 0 && berechneterBestand < mindestBestand) {
       otomatikSiparisOneri = Math.max(mindestBestand * 2 - berechneterBestand, 0);
     }
 
@@ -887,12 +889,9 @@ const UltraModernHospitalApp = () => {
       otomatikSiparisOneri: otomatikSiparisOneri
     }));
   }, [
-    newOrder.anfangsBestand, 
     newOrder.menge, 
-    newOrder.verteilteAnzahl, 
     newOrder.mindestBestand,
-    editingOrder, 
-    orders
+    editingOrder
   ]);
 
   const handleAddOrder = () => {
