@@ -659,6 +659,123 @@ const ReportsPage = ({ orders, onBack }) => {
 };
 
 const UltraModernHospitalApp = () => {
+  // 🎨 PROFESSIONAL THEME SYSTEM
+  const [currentTheme, setCurrentTheme] = useState('modern');
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [showThemeSelector, setShowThemeSelector] = useState(false);
+
+  // Load theme from localStorage on mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('hospitalApp_theme') || 'modern';
+    const savedDarkMode = localStorage.getItem('hospitalApp_darkMode') === 'true';
+    setCurrentTheme(savedTheme);
+    setIsDarkMode(savedDarkMode);
+  }, []);
+
+  // Save theme changes to localStorage
+  useEffect(() => {
+    localStorage.setItem('hospitalApp_theme', currentTheme);
+    localStorage.setItem('hospitalApp_darkMode', isDarkMode.toString());
+  }, [currentTheme, isDarkMode]);
+
+  const themes = {
+    modern: {
+      name: '🌈 Modern Rainbow',
+      description: 'Canlı gradyan tasarım (Default)',
+      light: {
+        background: 'from-indigo-900 via-purple-900 to-pink-900',
+        header: 'bg-white/10 backdrop-blur-xl border-white/20',
+        actionBar: 'bg-white/5 border-white/10',
+        card: 'bg-white/10 backdrop-blur-xl border-white/20',
+        text: 'text-white',
+        textSecondary: 'text-white/80',
+        button: {
+          primary: 'from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600',
+          secondary: 'from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600',
+          danger: 'from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600'
+        }
+      },
+      dark: {
+        background: 'from-gray-900 via-slate-900 to-zinc-900',
+        header: 'bg-gray-800/90 backdrop-blur-xl border-gray-700/50',
+        actionBar: 'bg-gray-800/50 border-gray-700/30',
+        card: 'bg-gray-800/80 backdrop-blur-xl border-gray-700/50',
+        text: 'text-gray-100',
+        textSecondary: 'text-gray-300',
+        button: {
+          primary: 'from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700',
+          secondary: 'from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700',
+          danger: 'from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700'
+        }
+      }
+    },
+    corporate: {
+      name: '🏢 Corporate Blue',
+      description: 'Profesyonel mavi tonları',
+      light: {
+        background: 'from-blue-900 via-indigo-900 to-slate-900',
+        header: 'bg-blue-900/80 backdrop-blur-xl border-blue-700/30',
+        actionBar: 'bg-blue-900/30 border-blue-700/20',
+        card: 'bg-blue-900/40 backdrop-blur-xl border-blue-700/30',
+        text: 'text-blue-50',
+        textSecondary: 'text-blue-200',
+        button: {
+          primary: 'from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700',
+          secondary: 'from-slate-600 to-gray-600 hover:from-slate-700 hover:to-gray-700',
+          danger: 'from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700'
+        }
+      },
+      dark: {
+        background: 'from-slate-900 via-gray-900 to-zinc-900',
+        header: 'bg-slate-800/90 backdrop-blur-xl border-slate-700/50',
+        actionBar: 'bg-slate-800/50 border-slate-700/30',
+        card: 'bg-slate-800/80 backdrop-blur-xl border-slate-700/50',
+        text: 'text-slate-100',
+        textSecondary: 'text-slate-300',
+        button: {
+          primary: 'from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700',
+          secondary: 'from-slate-600 to-gray-600 hover:from-slate-700 hover:to-gray-700',
+          danger: 'from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700'
+        }
+      }
+    },
+    medical: {
+      name: '🏥 Medical Green',
+      description: 'Hastane yeşil/beyaz teması',
+      light: {
+        background: 'from-emerald-900 via-teal-900 to-green-900',
+        header: 'bg-emerald-900/80 backdrop-blur-xl border-emerald-700/30',
+        actionBar: 'bg-emerald-900/30 border-emerald-700/20',
+        card: 'bg-emerald-900/40 backdrop-blur-xl border-emerald-700/30',
+        text: 'text-emerald-50',
+        textSecondary: 'text-emerald-200',
+        button: {
+          primary: 'from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700',
+          secondary: 'from-green-600 to-lime-600 hover:from-green-700 hover:to-lime-700',
+          danger: 'from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700'
+        }
+      },
+      dark: {
+        background: 'from-gray-900 via-emerald-950 to-teal-950',
+        header: 'bg-emerald-900/90 backdrop-blur-xl border-emerald-700/50',
+        actionBar: 'bg-emerald-900/50 border-emerald-700/30',
+        card: 'bg-emerald-900/80 backdrop-blur-xl border-emerald-700/50',
+        text: 'text-emerald-100',
+        textSecondary: 'text-emerald-300',
+        button: {
+          primary: 'from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700',
+          secondary: 'from-green-600 to-lime-600 hover:from-green-700 hover:to-lime-700',
+          danger: 'from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700'
+        }
+      }
+    }
+  };
+
+  const getCurrentThemeStyles = () => {
+    const themeData = themes[currentTheme] || themes.modern;
+    return isDarkMode ? themeData.dark : themeData.light;
+  };
+
   const [orders, setOrders] = useState([
     {
       id: 1,
