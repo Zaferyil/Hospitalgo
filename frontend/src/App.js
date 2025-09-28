@@ -17,10 +17,9 @@ const Home = () => {
     }
   };
 
-  // Temporarily commented out to test app loading
-  // useEffect(() => {
-  //   helloWorldApi();
-  // }, []);
+  useEffect(() => {
+    helloWorldApi();
+  }, []);
 
   return (
     <div className="min-h-screen">
