@@ -1620,54 +1620,91 @@ const UltraModernHospitalApp = () => {
 
           {/* Mobile Menu */}
           {showMobileMenu && (
-            <div className="lg:hidden border-t border-white/20 py-4">
+            <div className={`lg:hidden border-t ${getCurrentThemeStyles().actionBar.replace('bg-white/5', 'bg-white/10')} py-4`}>
               <div className="flex flex-col space-y-3">
+                
+                {/* THEME CONTROLS - Mobile */}
+                <div className="mb-4 p-3 rounded-xl border border-white/20">
+                  <h4 className={`font-bold mb-2 text-sm ${getCurrentThemeStyles().text}`}>🎨 Design & Modus</h4>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => setShowThemeSelector(!showThemeSelector)}
+                      className={`flex-1 bg-gradient-to-r ${getCurrentThemeStyles().button.secondary} text-white px-3 py-2 rounded-lg font-bold text-xs`}
+                    >
+                      🎨 Tema
+                    </button>
+                    <button
+                      onClick={() => setIsDarkMode(!isDarkMode)}
+                      className={`flex-1 bg-gradient-to-r ${isDarkMode ? 'from-yellow-500 to-orange-500' : 'from-indigo-500 to-purple-500'} text-white px-3 py-2 rounded-lg font-bold text-xs`}
+                    >
+                      {isDarkMode ? '☀️' : '🌙'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* PRIMARY STOCK ACTIONS */}
+                <div className="grid grid-cols-1 gap-2 mb-4">
+                  <button
+                    onClick={() => {
+                      setTransactionType('neue_bestellung');
+                      setShowAddForm(true);
+                      setShowMobileMenu(false);
+                    }}
+                    className={`bg-gradient-to-r ${getCurrentThemeStyles().button.primary} text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm`}
+                    data-testid="mobile-new-order-button"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>🛒 Neue Bestellung</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setTransactionType('stok_eingang');
+                      setShowAddForm(true);
+                      setShowMobileMenu(false);
+                    }}
+                    className={`bg-gradient-to-r ${getCurrentThemeStyles().button.secondary} text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm`}
+                    data-testid="mobile-stock-entry-button"
+                  >
+                    <Package className="h-4 w-4" />
+                    <span>📦 Lagereingang</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setTransactionType('stok_ausgang');
+                      setShowAddForm(true);
+                      setShowMobileMenu(false);
+                    }}
+                    className={`bg-gradient-to-r ${getCurrentThemeStyles().button.danger} text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm`}
+                    data-testid="mobile-stock-exit-button"
+                  >
+                    <Minus className="h-4 w-4" />
+                    <span>📤 Lagerausgang</span>
+                  </button>
+                </div>
+
+                {/* REPORTS */}
                 <button
                   onClick={() => {
                     handleReportsClick();
                     setShowMobileMenu(false);
                   }}
-                  className="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white px-4 py-3 rounded-xl flex items-center space-x-2 font-bold transition-all duration-300 text-sm"
+                  className={`bg-gradient-to-r ${getCurrentThemeStyles().button.secondary} text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm`}
                   data-testid="mobile-reports-button"
                 >
                   <BarChart3 className="h-4 w-4" />
                   <span>📊 Berichte</span>
                 </button>
 
-                <div className="flex space-x-2">
+                {/* EXPORT ACTIONS - Only One Set */}
+                <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => {
                       exportToExcel();
                       setShowMobileMenu(false);
                     }}
-                    className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm"
-                    data-testid="mobile-export-excel-button"
-                  >
-                    <Download className="h-4 w-4" />
-                    <span>📋 Excel</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      exportToPDF();
-                      setShowMobileMenu(false);
-                    }}
-                    className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm"
-                    data-testid="mobile-export-pdf-button"
-                  >
-                    <FileText className="h-4 w-4" />
-                    <span>📄 PDF</span>
-                  </button>
-                </div>
-
-                {/* EXPORT ACTIONS */}
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  <button
-                    onClick={() => {
-                      exportToExcel();
-                      setShowMobileMenu(false);
-                    }}
-                    className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm"
+                    className={`bg-gradient-to-r ${getCurrentThemeStyles().button.secondary} text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm`}
                     data-testid="mobile-export-excel-button"
                   >
                     <Download className="h-4 w-4" />
@@ -1678,53 +1715,13 @@ const UltraModernHospitalApp = () => {
                       exportToPDF();
                       setShowMobileMenu(false);
                     }}
-                    className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm"
+                    className={`bg-gradient-to-r ${getCurrentThemeStyles().button.secondary} text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm`}
                     data-testid="mobile-export-pdf-button"
                   >
                     <FileText className="h-4 w-4" />
                     <span>📄 PDF</span>
                   </button>
                 </div>
-
-                {/* STOCK MANAGEMENT ACTIONS */}
-                <button
-                  onClick={() => {
-                    setTransactionType('neue_bestellung');
-                    setShowAddForm(true);
-                    setShowMobileMenu(false);
-                  }}
-                  className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm"
-                  data-testid="mobile-new-order-button"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>🛒 Neue Bestellung</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    setTransactionType('stok_eingang');
-                    setShowAddForm(true);
-                    setShowMobileMenu(false);
-                  }}
-                  className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm"
-                  data-testid="mobile-stock-entry-button"
-                >
-                  <Package className="h-4 w-4" />
-                  <span>📦 Lagereingang</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    setTransactionType('stok_ausgang');
-                    setShowAddForm(true);
-                    setShowMobileMenu(false);
-                  }}
-                  className="bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm"
-                  data-testid="mobile-stock-exit-button"
-                >
-                  <Minus className="h-4 w-4" />
-                  <span>📤 Lagerausgang</span>
-                </button>
               </div>
             </div>
           )}
