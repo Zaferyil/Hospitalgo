@@ -959,8 +959,8 @@ const UltraModernHospitalApp = () => {
         ? {
           ...newOrder,
           menge: neueBestellmenge,
-          mindestBestand: parseInt(newOrder.mindestBestand.toString()) || 0,
-          maxBestand: parseInt(newOrder.maxBestand.toString()) || 100,
+          mindestBestand: parseInt((newOrder.mindestBestand || 0).toString()) || 0,
+          maxBestand: parseInt((newOrder.maxBestand || 100).toString()) || 100,
           aktuellerBestand: finalBestand, // 📦 Einfache Formel
           verteilteAnzahl: verteilteAnzahl,
           // Ältere Felder für Kompatibilität
