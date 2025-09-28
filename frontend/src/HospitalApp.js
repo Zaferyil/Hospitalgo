@@ -1620,7 +1620,7 @@ const UltraModernHospitalApp = () => {
 
           {/* Mobile Menu */}
           {showMobileMenu && (
-            <div className={`lg:hidden border-t ${getCurrentThemeStyles().actionBar.replace('bg-white/5', 'bg-white/10')} py-4`}>
+            <div className={`md:hidden border-t ${getCurrentThemeStyles().actionBar.replace('bg-white/5', 'bg-white/10')} py-4`}>
               <div className="flex flex-col space-y-3">
                 
                 {/* THEME CONTROLS - Mobile */}
