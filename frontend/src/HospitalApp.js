@@ -764,17 +764,13 @@ const UltraModernHospitalApp = () => {
     budgetKodu: ''
   });
 
-  // 🚀 PROFESSIONAL CALCULATION ENGINE
+  // 🚀 PROFESSIONAL CALCULATION ENGINE - Updated for German Stock System
   useEffect(() => {
     const anfangsBestand = parseInt(newOrder.anfangsBestand.toString()) || 0;
     const neueBestellung = parseInt(newOrder.menge.toString()) || 0;
     const verteilteAnzahl = parseInt(newOrder.verteilteAnzahl.toString()) || 0;
-    const birimFiyat = parseFloat(newOrder.birimFiyat.toString()) || 0;
     const mindestBestand = parseInt(newOrder.mindestBestand.toString()) || 0;
 
-    // 💰 TOPLAM TUTAR HESAPLAMA
-    const toplamTutar = neueBestellung * birimFiyat;
-    
     // 📦 STOK HESAPLAMA
     let berechneterBestand;
     if (editingOrder) {
@@ -790,9 +786,9 @@ const UltraModernHospitalApp = () => {
     if (berechneterBestand <= mindestBestand * 0.5) {
       lagerStatus = 'kritisch';
     } else if (berechneterBestand <= mindestBestand) {
-      lagerStatus = 'düşük';
+      lagerStatus = 'niedrig';
     } else if (berechneterBestand > mindestBestand * 3) {
-      lagerStatus = 'yüksek';
+      lagerStatus = 'hoch';
     }
 
     // 🤖 OTOMATİK SİPARİŞ ÖNERİSİ
@@ -804,7 +800,6 @@ const UltraModernHospitalApp = () => {
     setNewOrder(prev => ({ 
       ...prev, 
       aktuellerBestand: berechneterBestand,
-      toplamTutar: toplamTutar,
       lagerStatus: lagerStatus,
       otomatikSiparisOneri: otomatikSiparisOneri
     }));
@@ -812,7 +807,6 @@ const UltraModernHospitalApp = () => {
     newOrder.anfangsBestand, 
     newOrder.menge, 
     newOrder.verteilteAnzahl, 
-    newOrder.birimFiyat, 
     newOrder.mindestBestand,
     editingOrder, 
     orders
