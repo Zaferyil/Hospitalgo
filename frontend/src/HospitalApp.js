@@ -1875,14 +1875,38 @@ const UltraModernHospitalApp = () => {
                 </div>
               </div>
 
+              </div>
+
+              {/* STOK YÖNETİMİ */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+                <div className="md:col-span-2 lg:col-span-4">
+                  <h5 className="text-white font-bold mb-3 flex items-center">
+                    📊 Stok Yönetimi
+                  </h5>
+                </div>
+
+                <div>
+                  <label className="block text-white/80 text-sm font-bold mb-2">Anfangsbestand</label>
+                  <input
+                    type="number"
+                    value={newOrder.anfangsBestand}
+                    onChange={(e) => setNewOrder({...newOrder, anfangsBestand: parseInt(e.target.value) || 0})}
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-orange-500/50 focus:border-orange-400 transition-all duration-300 text-white placeholder-white/60"
+                    placeholder="0"
+                    min="0"
+                    data-testid="initial-stock-input"
+                  />
+                </div>
+
                 <div>
                   <label className="block text-white/80 text-sm font-bold mb-2">Verteilte Anzahl</label>
                   <input
                     type="number"
                     value={newOrder.verteilteAnzahl}
                     onChange={(e) => setNewOrder({...newOrder, verteilteAnzahl: parseInt(e.target.value) || 0})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-red-500/50 focus:border-red-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-red-500/50 focus:border-red-400 transition-all duration-300 text-white placeholder-white/60"
                     placeholder="0"
+                    min="0"
                     data-testid="distributed-quantity-input"
                   />
                 </div>
@@ -1893,8 +1917,9 @@ const UltraModernHospitalApp = () => {
                     type="number"
                     value={newOrder.mindestBestand}
                     onChange={(e) => setNewOrder({...newOrder, mindestBestand: parseInt(e.target.value) || 0})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-400 transition-all duration-300 text-white placeholder-white/60"
                     placeholder="0"
+                    min="0"
                     data-testid="minimum-stock-input"
                   />
                 </div>
@@ -1905,18 +1930,97 @@ const UltraModernHospitalApp = () => {
                     type="number"
                     value={newOrder.maxBestand}
                     onChange={(e) => setNewOrder({...newOrder, maxBestand: parseInt(e.target.value) || 100})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-pink-500/50 focus:border-pink-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-pink-500/50 focus:border-pink-400 transition-all duration-300 text-white placeholder-white/60"
                     placeholder="100"
+                    min="0"
                     data-testid="maximum-stock-input"
                   />
                 </div>
+              </div>
 
+              {/* TEDARİKÇİ BİLGİLERİ */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                <div className="md:col-span-2 lg:col-span-3">
+                  <h5 className="text-white font-bold mb-3 flex items-center">
+                    🚛 Tedarikçi & Teslimat Bilgileri
+                  </h5>
+                </div>
+
+                <div>
+                  <label className="block text-white/80 text-sm font-bold mb-2">Ana Tedarikçi</label>
+                  <input
+                    type="text"
+                    value={newOrder.lieferant}
+                    onChange={(e) => setNewOrder({...newOrder, lieferant: e.target.value})}
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-teal-500/50 focus:border-teal-400 transition-all duration-300 text-white placeholder-white/60"
+                    placeholder="z.B. Medizinischer Großhandel GmbH"
+                    data-testid="supplier-input"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-white/80 text-sm font-bold mb-2">Alternatif Tedarikçi</label>
+                  <input
+                    type="text"
+                    value={newOrder.alternatifTedarikci}
+                    onChange={(e) => setNewOrder({...newOrder, alternatifTedarikci: e.target.value})}
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-emerald-500/50 focus:border-emerald-400 transition-all duration-300 text-white placeholder-white/60"
+                    placeholder="z.B. Alternative Quelle"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-white/80 text-sm font-bold mb-2">Teslimat Süresi (Gün)</label>
+                  <input
+                    type="number"
+                    value={newOrder.teslimatSuresi}
+                    onChange={(e) => setNewOrder({...newOrder, teslimatSuresi: parseInt(e.target.value) || 0})}
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-violet-500/50 focus:border-violet-400 transition-all duration-300 text-white placeholder-white/60"
+                    placeholder="z.B. 3"
+                    min="0"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-white/80 text-sm font-bold mb-2">Bestelldatum</label>
+                  <input
+                    type="date"
+                    value={newOrder.bestelldatum}
+                    onChange={(e) => setNewOrder({...newOrder, bestelldatum: e.target.value})}
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-white/80 text-sm font-bold mb-2">Gewünschtes Lieferdatum</label>
+                  <input
+                    type="date"
+                    value={newOrder.lieferdatum || ''}
+                    onChange={(e) => setNewOrder({...newOrder, lieferdatum: e.target.value})}
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white"
+                    data-testid="delivery-date-input"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-white/80 text-sm font-bold mb-2">Son Kullanma Tarihi</label>
+                  <input
+                    type="date"
+                    value={newOrder.sonKullanmaTarihi}
+                    onChange={(e) => setNewOrder({...newOrder, sonKullanmaTarihi: e.target.value})}
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-orange-500/50 focus:border-orange-400 transition-all duration-300 text-white"
+                  />
+                </div>
+              </div>
+
+              {/* STATUS & PRİORİTE */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                 <div>
                   <label className="block text-white/80 text-sm font-bold mb-2">Status</label>
                   <select
                     value={newOrder.status}
                     onChange={(e) => setNewOrder({...newOrder, status: e.target.value})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-indigo-500/50 focus:border-indigo-400 transition-all duration-300 text-white text-sm md:text-base"
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-indigo-500/50 focus:border-indigo-400 transition-all duration-300 text-white"
                     data-testid="status-select"
                   >
                     {statusOptions.map(s => (
@@ -1930,7 +2034,7 @@ const UltraModernHospitalApp = () => {
                   <select
                     value={newOrder.prioritaet}
                     onChange={(e) => setNewOrder({...newOrder, prioritaet: e.target.value})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white text-sm md:text-base"
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white"
                     data-testid="priority-select"
                   >
                     {prioritaetOptions.map(p => (
@@ -1938,54 +2042,54 @@ const UltraModernHospitalApp = () => {
                     ))}
                   </select>
                 </div>
-
-                <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Lieferant</label>
-                  <input
-                    type="text"
-                    value={newOrder.lieferant}
-                    onChange={(e) => setNewOrder({...newOrder, lieferant: e.target.value})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-teal-500/50 focus:border-teal-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
-                    placeholder="z.B. Medizinischer Großhandel"
-                    data-testid="supplier-input"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Lieferdatum</label>
-                  <input
-                    type="date"
-                    value={newOrder.lieferdatum || ''}
-                    onChange={(e) => setNewOrder({...newOrder, lieferdatum: e.target.value})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white text-sm md:text-base"
-                    data-testid="delivery-date-input"
-                  />
-                </div>
               </div>
 
-              <div className="mt-4 md:mt-6">
-                <label className="block text-white/80 text-sm font-bold mb-2">Notizen</label>
+              {/* NOTLAR */}
+              <div className="mt-6">
+                <label className="block text-white/80 text-sm font-bold mb-2">Notizen & Bemerkungen</label>
                 <textarea
                   value={newOrder.notizen}
                   onChange={(e) => setNewOrder({...newOrder, notizen: e.target.value})}
-                  className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white placeholder-white/60 h-20 md:h-24 resize-none text-sm md:text-base"
-                  placeholder="Zusätzliche Informationen..."
+                  className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white placeholder-white/60 h-24 resize-none"
+                  placeholder="Zusätzliche Informationen, spezielle Anweisungen..."
                   data-testid="notes-textarea"
                 />
               </div>
 
-              {/* Berechneter Bestand Anzeige */}
-              <div className="mt-4 md:mt-6 p-3 md:p-4 bg-white/5 backdrop-blur-sm rounded-xl md:rounded-2xl">
-                <h4 className="text-white font-bold mb-2 text-sm md:text-base">📊 Berechneter aktueller Bestand:</h4>
-                <p className="text-xl md:text-2xl font-black text-cyan-400">
-                  {newOrder.aktuellerBestand} {newOrder.bestandseinheit || newOrder.einheit || 'Stück'}
-                </p>
-                <p className="text-white/60 text-xs md:text-sm mt-1">
-                  Formel: Anfangsbestand ({newOrder.anfangsBestand}) + Neue Bestellung ({newOrder.menge}) - Verteilte Anzahl ({newOrder.verteilteAnzahl})
-                </p>
+              {/* HESAPLAMA ÖZETİ */}
+              <div className="mt-6 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+                <h4 className="text-white font-bold mb-3 flex items-center">
+                  🧮 Berechnungsübersicht
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <span className="text-white/60">Formel:</span><br />
+                    <span className="text-cyan-400 font-mono">
+                      Anfang ({newOrder.anfangsBestand}) + Bestellung ({newOrder.menge}) - Verteilt ({newOrder.verteilteAnzahl})
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-white/60">Kosten Berechnung:</span><br />
+                    <span className="text-green-400 font-mono">
+                      {newOrder.menge} × {newOrder.birimFiyat}€ = {newOrder.toplamTutar.toFixed(2)}€
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-white/60">Lager Status:</span><br />
+                    <span className={`font-bold ${
+                      newOrder.lagerStatus === 'kritisch' ? 'text-red-400' :
+                      newOrder.lagerStatus === 'düşük' ? 'text-yellow-400' :
+                      newOrder.lagerStatus === 'yüksek' ? 'text-green-400' :
+                      'text-blue-400'
+                    }`}>
+                      {newOrder.lagerStatus.toUpperCase()}
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex flex-col md:flex-row justify-end space-y-3 md:space-y-0 md:space-x-4 mt-6 md:mt-8">
+              {/* FORM BUTTONS */}
+              <div className="flex flex-col md:flex-row justify-end space-y-3 md:space-y-0 md:space-x-4 mt-8">
                 <button
                   onClick={() => {
                     setShowAddForm(false);
@@ -2009,22 +2113,33 @@ const UltraModernHospitalApp = () => {
                       verteilungseinheit: 'Stück',
                       bestandseinheit: 'Stück',
                       anfangsBestand: 0,
-                      erhalteneBestellungen: 0
+                      erhalteneBestellungen: 0,
+                      birimFiyat: 0,
+                      toplamTutar: 0,
+                      sku: '',
+                      teslimatSuresi: 0,
+                      alternatifTedarikci: '',
+                      sonKullanmaTarihi: '',
+                      lagerStatus: 'normal',
+                      otomatikSiparisOneri: 0,
+                      budgetKodu: ''
                     });
                   }}
-                  className="w-full md:w-auto px-4 md:px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white rounded-xl md:rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 text-sm md:text-base"
+                  className="w-full md:w-auto px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white rounded-xl font-bold transition-all duration-300 transform hover:scale-105"
                   data-testid="cancel-button"
                 >
                   ❌ Abbrechen
                 </button>
                 <button
                   onClick={editingOrder ? handleUpdateOrder : handleAddOrder}
-                  className="w-full md:w-auto px-4 md:px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl md:rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 text-sm md:text-base"
+                  disabled={!newOrder.produktName || !newOrder.kategorie || newOrder.menge <= 0}
+                  className="w-full md:w-auto px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white rounded-xl font-bold transition-all duration-300 transform hover:scale-105 disabled:transform-none"
                   data-testid="save-button"
                 >
-                  {editingOrder ? '💾 Aktualisieren' : '➕ Hinzufügen'}
+                  {editingOrder ? '💾 Aktualisieren' : '🚀 Professionelle Bestellung erstellen'}
                 </button>
               </div>
+
             </div>
           </div>
         )}
