@@ -838,8 +838,10 @@ const UltraModernHospitalApp = () => {
     sku: '',
     lagerStatus: 'normal',
     otomatikSiparisOneri: 0,
-    // 🆕 TRANSACTION FIELDS
-    transactionType: 'neue_bestellung'
+    // 🆕 PROFESSIONAL TRANSACTION FIELDS
+    transactionType: 'neue_bestellung',
+    transactionDate: new Date().toISOString().split('T')[0],
+    transactionHistory: [] // İşlem geçmişi
   });
 
   // 🧮 SIMPLIFIED CALCULATION ENGINE - Fixed Logic
