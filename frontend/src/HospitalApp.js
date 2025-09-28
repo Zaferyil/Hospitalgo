@@ -817,6 +817,9 @@ const UltraModernHospitalApp = () => {
   const statusOptions = ['Bestellt', 'Geliefert', 'Storniert', 'Ausstehend'];
   const prioritaetOptions = ['Kritisch', 'Hoch', 'Normal', 'Niedrig'];
 
+  // 🔄 STOCK TRANSACTION SYSTEM - German
+  const [transactionType, setTransactionType] = useState('neue_bestellung'); // neue_bestellung, stok_eingang, stok_ausgang
+
   const [newOrder, setNewOrder] = useState({
     id: 0,
     produktName: '',
@@ -834,7 +837,9 @@ const UltraModernHospitalApp = () => {
     // 🆕 SIMPLIFIED FEATURES - Only Essential Fields
     sku: '',
     lagerStatus: 'normal',
-    otomatikSiparisOneri: 0
+    otomatikSiparisOneri: 0,
+    // 🆕 TRANSACTION FIELDS
+    transactionType: 'neue_bestellung'
   });
 
   // 🧮 SIMPLIFIED CALCULATION ENGINE - Fixed Logic
