@@ -1799,8 +1799,116 @@ const UltraModernHospitalApp = () => {
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-white/10 backdrop-blur-xl rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-2xl border border-white/20 w-full max-w-4xl max-h-[95vh] overflow-y-auto">
               <h3 className="text-xl md:text-2xl font-black text-white mb-4 md:mb-6">
-                {editingOrder ? '✏️ Bestellung bearbeiten' : '🚀 Professionelle Neue Bestellung'}
+                {editingOrder ? '✏️ Bestellung bearbeiten' : 
+                 transactionType === 'stok_eingang' ? '📦 Lagereingang' :
+                 transactionType === 'stok_ausgang' ? '📤 Lagerausgang' :
+                 '🚀 Neue Bestellung'}
               </h3>
+
+              {/* TRANSACTION TYPE SELECTOR */}
+              {!editingOrder && (
+                <div className="mb-6 p-4 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 rounded-xl">
+                  <h4 className="text-white font-bold mb-3">📋 Vorgang auswählen:</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <button
+                      onClick={() => {
+                        setTransactionType('neue_bestellung');
+                        setDuplicateProductWarning('');
+                        setExistingProduct(null);
+                      }}
+                      className={`p-3 rounded-xl border-2 transition-all ${
+                        transactionType === 'neue_bestellung' 
+                          ? 'bg-green-500/30 border-green-400 text-green-300' 
+                          : 'bg-white/10 border-white/20 text-white/70 hover:border-green-400/50'
+                      }`}
+                    >
+                      <div className="text-2xl mb-1">🛒</div>
+                      <div className="font-bold text-sm">Neue Bestellung</div>
+                      <div className="text-xs opacity-70">Neues Produkt bestellen</div>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        setTransactionType('stok_eingang');
+                        setDuplicateProductWarning('');
+                        setExistingProduct(null);
+                      }}
+                      className={`p-3 rounded-xl border-2 transition-all ${
+                        transactionType === 'stok_eingang' 
+                          ? 'bg-blue-500/30 border-blue-400 text-blue-300' 
+                          : 'bg-white/10 border-white/20 text-white/70 hover:border-blue-400/50'
+                      }`}
+                    >
+                      <div className="text-2xl mb-1">📦</div>
+                      <div className="font-bold text-sm">Lagereingang</div>
+                      <div className="text-xs opacity-70">Neue Lieferung erhalten</div>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        setTransactionType('stok_ausgang');
+                        setDuplicateProductWarning('');
+                        setExistingProduct(null);
+                      }}
+                      className={`p-3 rounded-xl border-2 transition-all ${
+                        transactionType === 'stok_ausgang' 
+                          ? 'bg-red-500/30 border-red-400 text-red-300' 
+                          : 'bg-white/10 border-white/20 text-white/70 hover:border-red-400/50'
+                      }`}
+                    >
+                      <div className="text-2xl mb-1">📤</div>
+                      <div className="font-bold text-sm">Lagerausgang</div>
+                      <div className="text-xs opacity-70">Verbrauch/Entnahme</div>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* PRODUCT SELECTOR FOR STOCK TRANSACTIONS */}
+              {(transactionType === 'stok_eingang' || transactionType === 'stok_ausgang') && (
+                <div className="mb-6 p-4 bg-gradient-to-r from-cyan-500/20 to-teal-500/20 border border-cyan-500/30 rounded-xl">
+                  <h4 className="text-cyan-300 font-bold mb-3">🔍 Vorhandenes Produkt auswählen:</h4>
+                  <select
+                    value={existingProduct?.id || ''}
+                    onChange={(e) => {
+                      const selectedOrder = orders.find(order => order.id === parseInt(e.target.value));
+                      setExistingProduct(selectedOrder || null);
+                      if (selectedOrder) {
+                        setNewOrder({
+                          ...newOrder,
+                          produktName: selectedOrder.produktName,
+                          kategorie: selectedOrder.kategorie,
+                          einheit: selectedOrder.einheit,
+                          menge: 0
+                        });
+                      }
+                    }}
+                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white"
+                  >
+                    <option value="" className="bg-gray-800">Produkt auswählen...</option>
+                    {orders.map(order => (
+                      <option key={order.id} value={order.id} className="bg-gray-800">
+                        {order.produktName} (Aktuell: {order.aktuellerBestand} {order.einheit || 'Stück'})
+                      </option>
+                    ))}
+                  </select>
+                  
+                  {existingProduct && (
+                    <div className="mt-3 p-3 bg-cyan-500/10 rounded-lg border border-cyan-500/20">
+                      <p className="text-cyan-300 font-bold">📊 Ausgewähltes Produkt:</p>
+                      <p className="text-white/80">
+                        <strong>{existingProduct.produktName}</strong><br/>
+                        Aktueller Bestand: <strong className="text-cyan-400">{existingProduct.aktuellerBestand} {existingProduct.einheit || 'Stück'}</strong>
+                        {existingProduct.mindestBestand > 0 && (
+                          <>
+                            <br/>Mindestbestand: {existingProduct.mindestBestand} {existingProduct.einheit || 'Stück'}
+                          </>
+                        )}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
               
               {/* SMART ALERTS */}
               {newOrder.otomatikSiparisOneri > 0 && (
