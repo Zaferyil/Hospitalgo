@@ -944,8 +944,8 @@ const UltraModernHospitalApp = () => {
   };
 
   const handleUpdateOrder = () => {
-    const neueBestellmenge = parseInt(newOrder.menge.toString()) || 0;
-    const verteilteAnzahl = parseInt(newOrder.verteilteAnzahl.toString()) || 0;
+    const neueBestellmenge = parseInt((newOrder.menge || 0).toString()) || 0;
+    const verteilteAnzahl = parseInt((newOrder.verteilteAnzahl || 0).toString()) || 0;
 
     // 🔄 Vorherigen Bestand vom aktuellen Auftrag holen
     const currentOrder = orders.find(o => o.id === editingOrder);
