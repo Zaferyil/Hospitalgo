@@ -123,20 +123,17 @@ frontend:
           agent: "testing"
           comment: "COMPREHENSIVE TESTING COMPLETED: ✅ Logo removal verification successful - NO 'Made with Emergent' branding found anywhere in the application (searched entire DOM, bottom-right corner, and all text content). ✅ Application loads properly without loading screen issues. ✅ All core functionality working: Reports page, Add Order modal, search/filter, view toggle (cards/table), Excel/PDF export, mobile responsiveness. ✅ PostHog removal successful - only minor network request failures to PostHog endpoints (expected behavior). ✅ No console errors or critical issues found. Task is fully complete and working perfectly."
 
-  - task: "Professional Order Form Testing"
+  - task: "Intelligent Stock Management System Testing"
     implemented: true
-    working: true
+    working: "NA"
     file: "/app/frontend/src/HospitalApp.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: "NA"
           agent: "testing"
-          comment: "Starting comprehensive testing of the new professional 'Neue Bestellung' form with enhanced features: smart calculations, inventory status, smart suggestions, enhanced fields (SKU, unit price, budget code, supplier info), and real-time feedback displays."
-        - working: true
-          agent: "testing"
-          comment: "COMPREHENSIVE TESTING COMPLETED ✅ All professional order form features working perfectly: ✅ Form Access: Professional form opens with correct title '🚀 Professionelle Neue Bestellung' ✅ Core Fields: Product Name, SKU, Category dropdown, Order Quantity, Unit Price (€), Unit field all functional ✅ Smart Calculations: Automatic total calculation working (10 × 2.50€ = 25.00€) ✅ Inventory Status: Stock level calculations and status indicators working ✅ Smart Suggestions: Automatic order recommendations appearing (18 Flaschen suggested) ✅ Enhanced Fields: All professional fields functional (supplier, delivery date, status, priority, notes) ✅ Stock Management: Initial stock, distributed quantity, minimum/maximum stock calculations working ✅ Real-time Feedback: Live cost summary and stock status displays updating automatically ✅ Form Functionality: Save and cancel buttons working, orders successfully created and appearing in list ✅ Mobile Responsiveness: Form accessible and functional on mobile devices. All requested professional features are implemented and working correctly."
+          comment: "Starting comprehensive testing of the new intelligent stock management system with German interface: price fields removal, intelligent stock detection, stock merging functionality, real-time product detection, and smart alerts in German."
 
 metadata:
   created_by: "main_agent"
