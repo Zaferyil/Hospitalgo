@@ -1002,6 +1002,37 @@ const UltraModernHospitalApp = () => {
   };
 
   const handleAddOrder = () => {
+    if (!newOrder.produktName || !newOrder.kategorie || newOrder.menge <= 0) {
+      alert('❌ Bitte alle Pflichtfelder ausfüllen!\n\n• Produktname\n• Kategorie\n• Bestellmenge (> 0)');
+      return;
+    }
+
+    const orderToAdd = { 
+      ...newOrder, 
+      id: Date.now(),
+      aktuellerBestand: newOrder.menge, // Initial stock equals ordered quantity
+      transactionHistory: [{
+        id: Date.now(),
+        date: newOrder.bestelldatum,
+        type: 'neue_bestellung',
+        amount: newOrder.menge,
+        previousStock: 0,
+        newStock: newOrder.menge,
+        description: `Neue Bestellung: ${newOrder.menge} ${newOrder.einheit || 'Stück'}`,
+        note: newOrder.notizen || ''
+      }]
+    };
+    
+    setOrders([...orders, orderToAdd]);
+    
+    // Show success message
+    alert(`✅ Neue Bestellung erfolgreich erstellt!\n\nProdukt: ${newOrder.produktName}\nMenge: ${newOrder.menge} ${newOrder.einheit || 'Stück'}\nDatum: ${new Date(newOrder.bestelldatum).toLocaleDateString('de-DE')}`);
+    
+    // Reset and close form
+    resetTransactionForm();
+    setShowAddForm(false); // Close the form modal
+    setEditingOrder(null);
+  };
     if (newOrder.produktName && newOrder.kategorie && newOrder.menge > 0) {
       const anfangsBestand = parseInt((newOrder.anfangsBestand || 0).toString()) || 0;
       const erhalteneBestellungen = parseInt((newOrder.menge || 0).toString()) || 0;
