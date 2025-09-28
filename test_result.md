@@ -165,6 +165,18 @@ frontend:
           agent: "testing"
           comment: "THEME SYSTEM TESTING COMPLETED - MIXED RESULTS ✅ WORKING PERFECTLY: German language implementation (🎨 Design button, 'Design auswählen' dropdown header, all theme names in German), Dropdown visibility (solid dark background bg-gray-900/95, fully readable text), Dark/Light mode toggle (🌙 Dark ↔ ☀️ Light working), Theme selection (localStorage correctly updated: modern → corporate → medical), Cards and buttons use proper theme styling with gradients. ❌ CRITICAL ISSUE FOUND: Theme background switching NOT working - main container only shows 'min-h-screen' class, missing gradient background classes. Manual testing proves Tailwind classes work perfectly (Modern Rainbow: purple/pink gradient, Corporate Blau: blue gradient, Medical Grün: green gradient), but React component's getCurrentThemeStyles().background returns empty values. ROOT CAUSE: Bug in React state management or getCurrentThemeStyles() function - theme selection works but CSS class generation fails. Theme persistence also fails due to same issue."
 
+  - task: "Mobile Duplicate Button Fix Testing"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/HospitalApp.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "testing"
+          comment: "Starting comprehensive testing of the mobile view fix to eliminate duplicate buttons. Testing focus: Action Bar Hidden on Mobile (hidden md:block), Clean Mobile Menu with single set of buttons, Mobile Theme Controls (dropdown theme selector + dark mode toggle), No Duplicate Buttons verification, Mobile Theme Functionality, Mobile Menu Organization, and Desktop vs Mobile Comparison. Expected results: No duplicate buttons in mobile view, Action Bar hidden on mobile screens, Clean mobile menu with organized single button set, Working theme controls (dropdown + dark mode toggle), All functionality preserved but better organized, Proper mobile UX without clutter."
+
 metadata:
   created_by: "main_agent"
   version: "1.1"
