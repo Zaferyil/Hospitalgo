@@ -2184,34 +2184,7 @@ const UltraModernHospitalApp = () => {
                   onClick={() => {
                     setShowAddForm(false);
                     setEditingOrder(null);
-                    setNewOrder({
-                      id: 0,
-                      produktName: '',
-                      kategorie: '',
-                      menge: 0,
-                      einheit: '',
-                      lieferant: '',
-                      bestelldatum: new Date().toISOString().split('T')[0],
-                      lieferdatum: '',
-                      status: 'Bestellt',
-                      notizen: '',
-                      mindestBestand: 0,
-                      maxBestand: 100,
-                      prioritaet: 'Normal',
-                      aktuellerBestand: 0,
-                      verteilteAnzahl: 0,
-                      verteilungseinheit: 'Stück',
-                      bestandseinheit: 'Stück',
-                      anfangsBestand: 0,
-                      erhalteneBestellungen: 0,
-                      sku: '',
-                      teslimatSuresi: 0,
-                      alternatifTedarikci: '',
-                      sonKullanmaTarihi: '',
-                      lagerStatus: 'normal',
-                      otomatikSiparisOneri: 0,
-                      budgetKodu: ''
-                    });
+                    resetTransactionForm();
                   }}
                   className="w-full md:w-auto px-4 md:px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white rounded-xl md:rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 text-sm md:text-base"
                   data-testid="cancel-button"
@@ -2219,12 +2192,23 @@ const UltraModernHospitalApp = () => {
                   ❌ Abbrechen
                 </button>
                 <button
-                  onClick={editingOrder ? handleUpdateOrder : handleAddOrder}
-                  disabled={!newOrder.produktName || !newOrder.kategorie || newOrder.menge <= 0}
+                  onClick={() => {
+                    if (transactionType === 'stok_eingang' || transactionType === 'stok_ausgang') {
+                      handleStockTransaction();
+                    } else {
+                      editingOrder ? handleUpdateOrder() : handleAddOrder();
+                    }
+                  }}
+                  disabled={
+                    (transactionType === 'neue_bestellung' && (!newOrder.produktName || !newOrder.kategorie || newOrder.menge <= 0)) ||
+                    ((transactionType === 'stok_eingang' || transactionType === 'stok_ausgang') && (!existingProduct || newOrder.menge <= 0))
+                  }
                   className="w-full md:w-auto px-4 md:px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white rounded-xl md:rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 disabled:transform-none text-sm md:text-base"
                   data-testid="save-button"
                 >
-                  {editingOrder ? '💾 Aktualisieren' : '📦 Intelligente Bestellung erstellen'}
+                  {transactionType === 'stok_eingang' ? '📦 Lagereingang buchen' :
+                   transactionType === 'stok_ausgang' ? '📤 Lagerausgang buchen' :
+                   editingOrder ? '💾 Aktualisieren' : '🛒 Bestellung erstellen'}
                 </button>
               </div>
             </div>
