@@ -2081,6 +2081,29 @@ const UltraModernHospitalApp = () => {
                   )}
                 </div>
 
+                {/* TRANSACTION DATE - Critical for professional tracking */}
+                <div>
+                  <label className="block text-white/80 text-sm font-bold mb-2">
+                    {transactionType === 'stok_eingang' ? 'Eingangsdatum *' :
+                     transactionType === 'stok_ausgang' ? 'Ausgangsdatum *' :
+                     'Bestelldatum *'}
+                  </label>
+                  <input
+                    type="date"
+                    value={transactionType === 'neue_bestellung' ? newOrder.bestelldatum : 
+                           (newOrder.transactionDate || new Date().toISOString().split('T')[0])}
+                    onChange={(e) => {
+                      if (transactionType === 'neue_bestellung') {
+                        setNewOrder({...newOrder, bestelldatum: e.target.value});
+                      } else {
+                        setNewOrder({...newOrder, transactionDate: e.target.value});
+                      }
+                    }}
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-orange-500/50 focus:border-orange-400 transition-all duration-300 text-white text-sm md:text-base"
+                    data-testid="transaction-date-input"
+                  />
+                </div>
+
                 {/* UNIT - Only for new orders or show existing */}
                 <div>
                   <label className="block text-white/80 text-sm font-bold mb-2">Einheit</label>
