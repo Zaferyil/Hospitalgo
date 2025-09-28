@@ -167,15 +167,18 @@ frontend:
 
   - task: "Mobile Duplicate Button Fix Testing"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/frontend/src/HospitalApp.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "testing"
           comment: "Starting comprehensive testing of the mobile view fix to eliminate duplicate buttons. Testing focus: Action Bar Hidden on Mobile (hidden md:block), Clean Mobile Menu with single set of buttons, Mobile Theme Controls (dropdown theme selector + dark mode toggle), No Duplicate Buttons verification, Mobile Theme Functionality, Mobile Menu Organization, and Desktop vs Mobile Comparison. Expected results: No duplicate buttons in mobile view, Action Bar hidden on mobile screens, Clean mobile menu with organized single button set, Working theme controls (dropdown + dark mode toggle), All functionality preserved but better organized, Proper mobile UX without clutter."
+        - working: false
+          agent: "testing"
+          comment: "MOBILE DUPLICATE BUTTON FIX TESTING COMPLETED - CRITICAL ISSUES FOUND ✅ WORKING FEATURES: Action Bar properly hidden on mobile (hidden md:block class working), Hamburger menu access working, Mobile theme controls working (🎨 Design & Modus section with dropdown + dark mode toggle), Theme functionality working (theme selection and dark mode toggle functional), Desktop vs mobile comparison working (action bar visible on desktop, hidden on mobile). ❌ CRITICAL FAILURES - DUPLICATE BUTTONS STILL PRESENT: Found 2 Neue Bestellung buttons (expected 1), Found 2 Lagereingang buttons (expected 1), Found 2 Lagerausgang buttons (expected 1), Found 2 Excel Export buttons (expected 1), Found 2 PDF Export buttons (expected 1), Found 2 Reports buttons (expected 1). ROOT CAUSE: The mobile menu still contains duplicate buttons despite the action bar being hidden. The fix is incomplete - buttons are appearing both in the mobile menu AND somewhere else in the mobile view. REQUIRES MAIN AGENT FIX: Remove duplicate button instances from mobile view to ensure only single set of buttons in mobile menu."
 
 metadata:
   created_by: "main_agent"
