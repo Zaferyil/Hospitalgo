@@ -1226,10 +1226,12 @@ const UltraModernHospitalApp = () => {
     setShowReports(!showReports);
   };
 
+  // 📊 Reports page handling  
   if (showReports) {
     return <ReportsPage orders={orders} onBack={() => setShowReports(false)} />;
   }
 
+  // 🏠 Main Application
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative overflow-auto">
       {/* PWA Installer */}
