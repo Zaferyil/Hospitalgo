@@ -1552,8 +1552,8 @@ const UltraModernHospitalApp = () => {
 
                 {/* Theme Dropdown */}
                 {showThemeSelector && (
-                  <div className="absolute right-0 top-12 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl p-3 min-w-64 z-50">
-                    <h4 className={`font-bold mb-3 ${getCurrentThemeStyles().text}`}>🎨 Tema Seçenekleri</h4>
+                  <div className="absolute right-0 top-12 bg-gray-900/95 backdrop-blur-xl border border-gray-600 rounded-xl shadow-2xl p-4 min-w-72 z-50">
+                    <h4 className="font-bold mb-4 text-white text-lg">🎨 Design auswählen</h4>
                     
                     {/* Theme Options */}
                     {Object.entries(themes).map(([key, theme]) => (
@@ -1563,12 +1563,12 @@ const UltraModernHospitalApp = () => {
                           setCurrentTheme(key);
                           setShowThemeSelector(false);
                         }}
-                        className={`w-full text-left p-3 rounded-lg mb-2 transition-all duration-300 hover:bg-white/10 ${
-                          currentTheme === key ? 'bg-white/20 border border-white/30' : 'border border-transparent'
+                        className={`w-full text-left p-4 rounded-xl mb-3 transition-all duration-300 hover:bg-white/20 ${
+                          currentTheme === key ? 'bg-blue-600/80 border border-blue-400' : 'bg-white/10 border border-gray-600 hover:border-gray-400'
                         }`}
                       >
-                        <div className={`font-bold ${getCurrentThemeStyles().text}`}>{theme.name}</div>
-                        <div className={`text-xs ${getCurrentThemeStyles().textSecondary}`}>{theme.description}</div>
+                        <div className="font-bold text-white text-base">{theme.name}</div>
+                        <div className="text-sm text-gray-300 mt-1">{theme.description}</div>
                       </button>
                     ))}
                   </div>
