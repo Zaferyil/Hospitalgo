@@ -889,6 +889,92 @@ const UltraModernHospitalApp = () => {
     editingOrder
   ]);
 
+  // 📦 STOCK ENTRY/EXIT FUNCTIONS - German
+  const handleStockTransaction = () => {
+    if (!existingProduct || !newOrder.menge || newOrder.menge <= 0) {
+      alert('❌ Bitte Produkt auswählen und gültige Menge eingeben!');
+      return;
+    }
+
+    const transactionAmount = parseInt(newOrder.menge) || 0;
+    let newStockLevel = existingProduct.aktuellerBestand;
+
+    if (transactionType === 'stok_eingang') {
+      // STOK GİRİŞİ - Neue Lieferung
+      newStockLevel = existingProduct.aktuellerBestand + transactionAmount;
+      
+      setOrders(orders.map(order =>
+        order.id === existingProduct.id
+          ? {
+            ...order,
+            aktuellerBestand: newStockLevel,
+            menge: order.menge + transactionAmount,
+            erhalteneBestellungen: (order.erhalteneBestellungen || 0) + transactionAmount,
+            bestelldatum: new Date().toISOString().split('T')[0],
+            notizen: order.notizen + `\n📦 Eingang: +${transactionAmount} ${order.einheit || 'Stück'} (${new Date().toLocaleDateString('de-DE')})`
+          }
+          : order
+      ));
+
+      alert(`✅ Lagereingang erfolgreich!\n${existingProduct.produktName}: ${newStockLevel} ${existingProduct.einheit || 'Stück'}\n(+${transactionAmount} hinzugefügt)`);
+
+    } else if (transactionType === 'stok_ausgang') {
+      // STOK ÇIKIŞI - Verbrauch/Entnahme
+      if (transactionAmount > existingProduct.aktuellerBestand) {
+        alert(`❌ Nicht genügend Lagerbestand!\nVerfügbar: ${existingProduct.aktuellerBestand} ${existingProduct.einheit || 'Stück'}\nAngefragt: ${transactionAmount} ${existingProduct.einheit || 'Stück'}`);
+        return;
+      }
+
+      newStockLevel = existingProduct.aktuellerBestand - transactionAmount;
+      
+      setOrders(orders.map(order =>
+        order.id === existingProduct.id
+          ? {
+            ...order,
+            aktuellerBestand: newStockLevel,
+            verteilteAnzahl: (order.verteilteAnzahl || 0) + transactionAmount,
+            notizen: order.notizen + `\n📤 Ausgang: -${transactionAmount} ${order.einheit || 'Stück'} (${new Date().toLocaleDateString('de-DE')})`
+          }
+          : order
+      ));
+
+      // Check for low stock warning
+      const warningText = newStockLevel <= (existingProduct.mindestBestand || 0) ? 
+        '\n⚠️ ACHTUNG: Lagerbestand niedrig!' : '';
+      
+      alert(`✅ Lagerausgang erfolgreich!\n${existingProduct.produktName}: ${newStockLevel} ${existingProduct.einheit || 'Stück'}\n(-${transactionAmount} entnommen)${warningText}`);
+    }
+
+    // Reset form
+    resetTransactionForm();
+  };
+
+  const resetTransactionForm = () => {
+    setNewOrder({
+      id: 0,
+      produktName: '',
+      kategorie: '',
+      menge: 0,
+      einheit: '',
+      lieferant: '',
+      bestelldatum: new Date().toISOString().split('T')[0],
+      lieferdatum: '',
+      status: 'Bestellt',
+      notizen: '',
+      mindestBestand: 0,
+      prioritaet: 'Normal',
+      aktuellerBestand: 0,
+      sku: '',
+      lagerStatus: 'normal',
+      otomatikSiparisOneri: 0,
+      transactionType: 'neue_bestellung'
+    });
+    
+    setDuplicateProductWarning('');
+    setExistingProduct(null);
+    setTransactionType('neue_bestellung');
+  };
+
   const handleAddOrder = () => {
     if (newOrder.produktName && newOrder.kategorie && newOrder.menge > 0) {
       const anfangsBestand = parseInt((newOrder.anfangsBestand || 0).toString()) || 0;
