@@ -170,7 +170,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Intelligent Stock Management System Testing"
+    - "Theme System German Language and Visibility Fix Testing"
+    - "Professional Action Toolbar Testing"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
