@@ -1728,8 +1728,8 @@ const UltraModernHospitalApp = () => {
         </div>
       </nav>
 
-      {/* 🏢 PROFESSIONAL ACTION TOOLBAR */}
-      <div className={`sticky top-16 md:top-20 z-30 backdrop-blur-xl ${getCurrentThemeStyles().actionBar} border-b shadow-lg`}>
+      {/* 🏢 PROFESSIONAL ACTION TOOLBAR - Hidden on Mobile */}
+      <div className={`hidden md:block sticky top-16 md:top-20 z-30 backdrop-blur-xl ${getCurrentThemeStyles().actionBar} border-b shadow-lg`}>
         <div className="max-w-7xl mx-auto px-3 md:px-4 lg:px-8 py-3 md:py-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             
