@@ -751,7 +751,17 @@ const UltraModernHospitalApp = () => {
     verteilungseinheit: 'Stück',
     bestandseinheit: 'Stück',
     anfangsBestand: 0,
-    erhalteneBestellungen: 0
+    erhalteneBestellungen: 0,
+    // 🆕 PROFESSIONAL FEATURES
+    birimFiyat: 0,
+    toplamTutar: 0,
+    sku: '',
+    teslimatSuresi: 0,
+    alternatifTedarikci: '',
+    sonKullanmaTarihi: '',
+    lagerStatus: 'normal', // kritisch, düşük, normal, yüksek
+    otomatikSiparisOneri: 0,
+    budgetKodu: ''
   });
 
   // 🔄 Automatische Berechnung mit useEffect
