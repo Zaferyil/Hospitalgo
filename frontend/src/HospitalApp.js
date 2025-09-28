@@ -1547,7 +1547,7 @@ const UltraModernHospitalApp = () => {
                   data-testid="theme-selector-button"
                 >
                   <span>🎨</span>
-                  <span className="hidden lg:inline">Tema</span>
+                  <span className="hidden lg:inline">Design</span>
                 </button>
 
                 {/* Theme Dropdown */}
