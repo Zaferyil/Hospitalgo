@@ -1522,7 +1522,7 @@ const UltraModernHospitalApp = () => {
       </div>
 
       {/* Glassmorphism Navigation */}
-      <nav className="backdrop-blur-xl bg-white/10 border-b border-white/20 sticky top-0 z-40 shadow-2xl">
+      <nav className={`backdrop-blur-xl ${getCurrentThemeStyles().header} border-b border-white/20 sticky top-0 z-40 shadow-2xl`}>
         <div className="max-w-7xl mx-auto px-3 md:px-4 lg:px-8">
           <div className="flex justify-between items-center h-16 md:h-20">
             <div className="flex items-center space-x-2 md:space-x-4">
