@@ -764,24 +764,59 @@ const UltraModernHospitalApp = () => {
     budgetKodu: ''
   });
 
-  // 🔄 Automatische Berechnung mit useEffect
+  // 🚀 PROFESSIONAL CALCULATION ENGINE
   useEffect(() => {
     const anfangsBestand = parseInt(newOrder.anfangsBestand.toString()) || 0;
     const neueBestellung = parseInt(newOrder.menge.toString()) || 0;
     const verteilteAnzahl = parseInt(newOrder.verteilteAnzahl.toString()) || 0;
+    const birimFiyat = parseFloat(newOrder.birimFiyat.toString()) || 0;
+    const mindestBestand = parseInt(newOrder.mindestBestand.toString()) || 0;
 
+    // 💰 TOPLAM TUTAR HESAPLAMA
+    const toplamTutar = neueBestellung * birimFiyat;
+    
+    // 📦 STOK HESAPLAMA
+    let berechneterBestand;
     if (editingOrder) {
-      // Bearbeitungsmodus: vorhandenen Bestand verwenden
       const currentOrder = orders.find(o => o.id === editingOrder);
       const vorherigerBestand = currentOrder ? currentOrder.aktuellerBestand : 0;
-      const berechneterBestand = vorherigerBestand + neueBestellung - verteilteAnzahl;
-      setNewOrder(prev => ({ ...prev, aktuellerBestand: berechneterBestand }));
+      berechneterBestand = vorherigerBestand + neueBestellung - verteilteAnzahl;
     } else {
-      // Neuer Eintragsmodus: Anfang + Bestellung - verteilt
-      const berechneterBestand = anfangsBestand + neueBestellung - verteilteAnzahl;
-      setNewOrder(prev => ({ ...prev, aktuellerBestand: berechneterBestand }));
+      berechneterBestand = anfangsBestand + neueBestellung - verteilteAnzahl;
     }
-  }, [newOrder.anfangsBestand, newOrder.menge, newOrder.verteilteAnzahl, editingOrder, orders]);
+
+    // 🚨 LAGER STATUS BELIRLEME
+    let lagerStatus = 'normal';
+    if (berechneterBestand <= mindestBestand * 0.5) {
+      lagerStatus = 'kritisch';
+    } else if (berechneterBestand <= mindestBestand) {
+      lagerStatus = 'düşük';
+    } else if (berechneterBestand > mindestBestand * 3) {
+      lagerStatus = 'yüksek';
+    }
+
+    // 🤖 OTOMATİK SİPARİŞ ÖNERİSİ
+    let otomatikSiparisOneri = 0;
+    if (berechneterBestand < mindestBestand && mindestBestand > 0) {
+      otomatikSiparisOneri = Math.max(mindestBestand * 2 - berechneterBestand, 0);
+    }
+
+    setNewOrder(prev => ({ 
+      ...prev, 
+      aktuellerBestand: berechneterBestand,
+      toplamTutar: toplamTutar,
+      lagerStatus: lagerStatus,
+      otomatikSiparisOneri: otomatikSiparisOneri
+    }));
+  }, [
+    newOrder.anfangsBestand, 
+    newOrder.menge, 
+    newOrder.verteilteAnzahl, 
+    newOrder.birimFiyat, 
+    newOrder.mindestBestand,
+    editingOrder, 
+    orders
+  ]);
 
   const handleAddOrder = () => {
     if (newOrder.produktName && newOrder.kategorie && newOrder.menge > 0) {
