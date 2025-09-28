@@ -670,7 +670,17 @@ const UltraModernHospitalApp = () => {
     const savedDarkMode = localStorage.getItem('hospitalApp_darkMode') === 'true';
     setCurrentTheme(savedTheme);
     setIsDarkMode(savedDarkMode);
-  }, []);
+    
+    // Close theme selector when clicking outside
+    const handleClickOutside = (event) => {
+      if (showThemeSelector && !event.target.closest('[data-testid="theme-selector-button"]')) {
+        setShowThemeSelector(false);
+      }
+    };
+    
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [showThemeSelector]);
 
   // Save theme changes to localStorage
   useEffect(() => {
