@@ -886,9 +886,9 @@ const UltraModernHospitalApp = () => {
 
   const handleAddOrder = () => {
     if (newOrder.produktName && newOrder.kategorie && newOrder.menge > 0) {
-      const anfangsBestand = parseInt(newOrder.anfangsBestand.toString()) || 0;
-      const erhalteneBestellungen = parseInt(newOrder.menge.toString()) || 0;
-      const verteilteAnzahl = parseInt(newOrder.verteilteAnzahl.toString()) || 0;
+      const anfangsBestand = parseInt((newOrder.anfangsBestand || 0).toString()) || 0;
+      const erhalteneBestellungen = parseInt((newOrder.menge || 0).toString()) || 0;
+      const verteilteAnzahl = parseInt((newOrder.verteilteAnzahl || 0).toString()) || 0;
       const aktuellerBestand = anfangsBestand + erhalteneBestellungen - verteilteAnzahl;
 
       const order = {
