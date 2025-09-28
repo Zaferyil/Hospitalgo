@@ -891,7 +891,7 @@ const UltraModernHospitalApp = () => {
     editingOrder
   ]);
 
-  // 📦 STOCK ENTRY/EXIT FUNCTIONS - German
+  // 📦 PROFESSIONAL STOCK TRANSACTION SYSTEM WITH DATE TRACKING
   const handleStockTransaction = () => {
     if (!existingProduct || !newOrder.menge || newOrder.menge <= 0) {
       alert('❌ Bitte Produkt auswählen und gültige Menge eingeben!');
@@ -899,11 +899,25 @@ const UltraModernHospitalApp = () => {
     }
 
     const transactionAmount = parseInt(newOrder.menge) || 0;
+    const transactionDate = newOrder.transactionDate || new Date().toISOString().split('T')[0];
+    const transactionDateFormatted = new Date(transactionDate).toLocaleDateString('de-DE');
     let newStockLevel = existingProduct.aktuellerBestand;
 
+    // Create transaction history entry
+    const transactionEntry = {
+      id: Date.now(),
+      date: transactionDate,
+      type: transactionType,
+      amount: transactionAmount,
+      previousStock: existingProduct.aktuellerBestand,
+      note: newOrder.notizen || ''
+    };
+
     if (transactionType === 'stok_eingang') {
-      // STOK GİRİŞİ - Neue Lieferung
+      // 📦 LAGER EINGANG - Stock Entry
       newStockLevel = existingProduct.aktuellerBestand + transactionAmount;
+      transactionEntry.newStock = newStockLevel;
+      transactionEntry.description = `Lagereingang: +${transactionAmount} ${existingProduct.einheit || 'Stück'}`;
       
       setOrders(orders.map(order =>
         order.id === existingProduct.id
@@ -912,22 +926,26 @@ const UltraModernHospitalApp = () => {
             aktuellerBestand: newStockLevel,
             menge: order.menge + transactionAmount,
             erhalteneBestellungen: (order.erhalteneBestellungen || 0) + transactionAmount,
-            bestelldatum: new Date().toISOString().split('T')[0],
-            notizen: order.notizen + `\n📦 Eingang: +${transactionAmount} ${order.einheit || 'Stück'} (${new Date().toLocaleDateString('de-DE')})`
+            bestelldatum: transactionDate,
+            transactionHistory: [...(order.transactionHistory || []), transactionEntry],
+            notizen: order.notizen + `\n📦 ${transactionDateFormatted}: Eingang +${transactionAmount} ${order.einheit || 'Stück'}` + 
+                    (newOrder.notizen ? ` (${newOrder.notizen})` : '')
           }
           : order
       ));
 
-      alert(`✅ Lagereingang erfolgreich!\n${existingProduct.produktName}: ${newStockLevel} ${existingProduct.einheit || 'Stück'}\n(+${transactionAmount} hinzugefügt)`);
+      alert(`✅ Lagereingang erfolgreich gebucht!\n\nDatum: ${transactionDateFormatted}\nProdukt: ${existingProduct.produktName}\nMenge: +${transactionAmount} ${existingProduct.einheit || 'Stück'}\nNeuer Bestand: ${newStockLevel} ${existingProduct.einheit || 'Stück'}`);
 
     } else if (transactionType === 'stok_ausgang') {
-      // STOK ÇIKIŞI - Verbrauch/Entnahme
+      // 📤 LAGER AUSGANG - Stock Exit
       if (transactionAmount > existingProduct.aktuellerBestand) {
-        alert(`❌ Nicht genügend Lagerbestand!\nVerfügbar: ${existingProduct.aktuellerBestand} ${existingProduct.einheit || 'Stück'}\nAngefragt: ${transactionAmount} ${existingProduct.einheit || 'Stück'}`);
+        alert(`❌ Lagerausgang nicht möglich!\n\nGrund: Nicht genügend Bestand\nVerfügbar: ${existingProduct.aktuellerBestand} ${existingProduct.einheit || 'Stück'}\nAngefragt: ${transactionAmount} ${existingProduct.einheit || 'Stück'}\n\nBitte Bestand prüfen oder Menge anpassen.`);
         return;
       }
 
       newStockLevel = existingProduct.aktuellerBestand - transactionAmount;
+      transactionEntry.newStock = newStockLevel;
+      transactionEntry.description = `Lagerausgang: -${transactionAmount} ${existingProduct.einheit || 'Stück'}`;
       
       setOrders(orders.map(order =>
         order.id === existingProduct.id
@@ -935,16 +953,18 @@ const UltraModernHospitalApp = () => {
             ...order,
             aktuellerBestand: newStockLevel,
             verteilteAnzahl: (order.verteilteAnzahl || 0) + transactionAmount,
-            notizen: order.notizen + `\n📤 Ausgang: -${transactionAmount} ${order.einheit || 'Stück'} (${new Date().toLocaleDateString('de-DE')})`
+            transactionHistory: [...(order.transactionHistory || []), transactionEntry],
+            notizen: order.notizen + `\n📤 ${transactionDateFormatted}: Ausgang -${transactionAmount} ${order.einheit || 'Stück'}` +
+                    (newOrder.notizen ? ` (${newOrder.notizen})` : '')
           }
           : order
       ));
 
       // Check for low stock warning
       const warningText = newStockLevel <= (existingProduct.mindestBestand || 0) ? 
-        '\n⚠️ ACHTUNG: Lagerbestand niedrig!' : '';
+        '\n\n⚠️ WARNUNG: Lagerbestand unter Mindestbestand!' : '';
       
-      alert(`✅ Lagerausgang erfolgreich!\n${existingProduct.produktName}: ${newStockLevel} ${existingProduct.einheit || 'Stück'}\n(-${transactionAmount} entnommen)${warningText}`);
+      alert(`✅ Lagerausgang erfolgreich gebucht!\n\nDatum: ${transactionDateFormatted}\nProdukt: ${existingProduct.produktName}\nMenge: -${transactionAmount} ${existingProduct.einheit || 'Stück'}\nNeuer Bestand: ${newStockLevel} ${existingProduct.einheit || 'Stück'}${warningText}`);
     }
 
     // Reset form
