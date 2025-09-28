@@ -1510,7 +1510,7 @@ const UltraModernHospitalApp = () => {
 
   // 🏠 Main Application
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative overflow-auto">
+    <div className={`min-h-screen bg-gradient-to-br ${getCurrentThemeStyles().background} relative overflow-auto`}>
       {/* PWA Installer */}
       <PWAInstaller />
       
