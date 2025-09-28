@@ -1641,61 +1641,15 @@ const UltraModernHospitalApp = () => {
           </div>
         )}
 
-        {/* 🚀 PROFESSIONAL ORDER FORM MODAL */}
+        {/* Add/Edit Form Modal */}
         {showAddForm && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white/10 backdrop-blur-xl rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-2xl border border-white/20 w-full max-w-6xl max-h-[95vh] overflow-y-auto">
+            <div className="bg-white/10 backdrop-blur-xl rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-2xl border border-white/20 w-full max-w-4xl max-h-[95vh] overflow-y-auto">
+              <h3 className="text-xl md:text-2xl font-black text-white mb-4 md:mb-6">
+                {editingOrder ? '✏️ Bestellung bearbeiten' : '🚀 Professionelle Neue Bestellung'}
+              </h3>
               
-              {/* 📋 HEADER */}
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h3 className="text-xl md:text-2xl font-black text-white">
-                    {editingOrder ? '✏️ Bestellung bearbeiten' : '🛒 Neue professionelle Bestellung'}
-                  </h3>
-                  <p className="text-white/60 text-sm mt-1">Intelligente Berechnung • Stok-Kontrolle • Automatische Vorschläge</p>
-                </div>
-                <button
-                  onClick={() => {
-                    setShowAddForm(false);
-                    setEditingOrder(null);
-                    setNewOrder({
-                      id: 0,
-                      produktName: '',
-                      kategorie: '',
-                      menge: 0,
-                      einheit: '',
-                      lieferant: '',
-                      bestelldatum: new Date().toISOString().split('T')[0],
-                      lieferdatum: '',
-                      status: 'Bestellt',
-                      notizen: '',
-                      mindestBestand: 0,
-                      maxBestand: 100,
-                      prioritaet: 'Normal',
-                      aktuellerBestand: 0,
-                      verteilteAnzahl: 0,
-                      verteilungseinheit: 'Stück',
-                      bestandseinheit: 'Stück',
-                      anfangsBestand: 0,
-                      erhalteneBestellungen: 0,
-                      birimFiyat: 0,
-                      toplamTutar: 0,
-                      sku: '',
-                      teslimatSuresi: 0,
-                      alternatifTedarikci: '',
-                      sonKullanmaTarihi: '',
-                      lagerStatus: 'normal',
-                      otomatikSiparisOneri: 0,
-                      budgetKodu: ''
-                    });
-                  }}
-                  className="text-white/60 hover:text-white text-2xl font-bold"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {/* 🚨 AKILLI UYARILAR */}
+              {/* SMART ALERTS */}
               {newOrder.otomatikSiparisOneri > 0 && (
                 <div className="mb-6 p-4 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-xl">
                   <div className="flex items-center space-x-3">
@@ -1716,46 +1670,7 @@ const UltraModernHospitalApp = () => {
                 </div>
               )}
 
-              {/* 📊 CANLI STOK DURUMU */}
-              <div className="mb-6 p-4 rounded-xl border" style={{
-                background: newOrder.lagerStatus === 'kritisch' ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1))' :
-                          newOrder.lagerStatus === 'düşük' ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1))' :
-                          newOrder.lagerStatus === 'yüksek' ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.1))' :
-                          'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1))',
-                borderColor: newOrder.lagerStatus === 'kritisch' ? 'rgba(239, 68, 68, 0.3)' :
-                           newOrder.lagerStatus === 'düşük' ? 'rgba(245, 158, 11, 0.3)' :
-                           newOrder.lagerStatus === 'yüksek' ? 'rgba(34, 197, 94, 0.3)' :
-                           'rgba(59, 130, 246, 0.3)'
-              }}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="text-2xl">
-                      {newOrder.lagerStatus === 'kritisch' ? '🚨' : 
-                       newOrder.lagerStatus === 'düşük' ? '⚠️' : 
-                       newOrder.lagerStatus === 'yüksek' ? '📈' : '✅'}
-                    </div>
-                    <div>
-                      <h4 className="text-white font-bold">Berechneter aktueller Bestand</h4>
-                      <p className="text-2xl font-black text-cyan-400">
-                        {newOrder.aktuellerBestand} {newOrder.bestandseinheit || newOrder.einheit || 'Stück'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm text-white/60">Status</div>
-                    <div className={`font-bold ${
-                      newOrder.lagerStatus === 'kritisch' ? 'text-red-400' :
-                      newOrder.lagerStatus === 'düşük' ? 'text-yellow-400' :
-                      newOrder.lagerStatus === 'yüksek' ? 'text-green-400' :
-                      'text-blue-400'
-                    }`}>
-                      {newOrder.lagerStatus.toUpperCase()}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 💰 MALİYET ÖZETİ */}
+              {/* LIVE COST SUMMARY */}
               {newOrder.toplamTutar > 0 && (
                 <div className="mb-6 p-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-xl">
                   <div className="flex items-center justify-between">
@@ -1771,46 +1686,37 @@ const UltraModernHospitalApp = () => {
                   </div>
                 </div>
               )}
-
-              {/* 📝 FORM ALANLARI */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                
-                {/* TEMEL BİLGİLER */}
-                <div className="md:col-span-2 lg:col-span-3">
-                  <h5 className="text-white font-bold mb-3 flex items-center">
-                    📦 Temel Ürün Bilgileri
-                  </h5>
-                </div>
-
-                <div className="lg:col-span-2">
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                <div className="md:col-span-2 lg:col-span-1">
                   <label className="block text-white/80 text-sm font-bold mb-2">Produktname *</label>
                   <input
                     type="text"
                     value={newOrder.produktName}
                     onChange={(e) => setNewOrder({...newOrder, produktName: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white placeholder-white/60"
-                    placeholder="z.B. Mineralwasser 1,5L Premium"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
+                    placeholder="z.B. Mineralwasser 1,5L"
                     data-testid="product-name-input"
                   />
                 </div>
 
-                <div>
+                <div className="md:col-span-2 lg:col-span-1">
                   <label className="block text-white/80 text-sm font-bold mb-2">SKU/Artikel-Nr.</label>
                   <input
                     type="text"
                     value={newOrder.sku}
                     onChange={(e) => setNewOrder({...newOrder, sku: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-gray-500/50 focus:border-gray-400 transition-all duration-300 text-white placeholder-white/60"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-gray-500/50 focus:border-gray-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
                     placeholder="z.B. MW-150-PR"
                   />
                 </div>
 
-                <div>
+                <div className="md:col-span-2 lg:col-span-1">
                   <label className="block text-white/80 text-sm font-bold mb-2">Kategorie *</label>
                   <select
                     value={newOrder.kategorie}
                     onChange={(e) => setNewOrder({...newOrder, kategorie: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white text-sm md:text-base"
                     data-testid="category-select"
                   >
                     <option value="" className="bg-gray-800">Kategorie wählen</option>
@@ -1821,33 +1727,13 @@ const UltraModernHospitalApp = () => {
                 </div>
 
                 <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Einheit</label>
-                  <input
-                    type="text"
-                    value={newOrder.einheit}
-                    onChange={(e) => setNewOrder({...newOrder, einheit: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 text-white placeholder-white/60"
-                    placeholder="z.B. Flaschen, Stück, Karton"
-                    data-testid="unit-input"
-                  />
-                </div>
-
-                {/* SİPARİŞ BİLGİLERİ */}
-                <div className="md:col-span-2 lg:col-span-3 mt-6">
-                  <h5 className="text-white font-bold mb-3 flex items-center">
-                    🛒 Sipariş Detayları
-                  </h5>
-                </div>
-
-                <div>
                   <label className="block text-white/80 text-sm font-bold mb-2">Bestellmenge *</label>
                   <input
                     type="number"
                     value={newOrder.menge}
                     onChange={(e) => setNewOrder({...newOrder, menge: parseInt(e.target.value) || 0})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-green-500/50 focus:border-green-400 transition-all duration-300 text-white placeholder-white/60"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-green-500/50 focus:border-green-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
                     placeholder="0"
-                    min="0"
                     data-testid="quantity-input"
                   />
                 </div>
@@ -1859,32 +1745,21 @@ const UltraModernHospitalApp = () => {
                     step="0.01"
                     value={newOrder.birimFiyat}
                     onChange={(e) => setNewOrder({...newOrder, birimFiyat: parseFloat(e.target.value) || 0})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-400 transition-all duration-300 text-white placeholder-white/60"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
                     placeholder="0.00"
-                    min="0"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Budget Kodu</label>
+                  <label className="block text-white/80 text-sm font-bold mb-2">Einheit</label>
                   <input
                     type="text"
-                    value={newOrder.budgetKodu}
-                    onChange={(e) => setNewOrder({...newOrder, budgetKodu: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-indigo-500/50 focus:border-indigo-400 transition-all duration-300 text-white placeholder-white/60"
-                    placeholder="z.B. BDG-2024-001"
+                    value={newOrder.einheit}
+                    onChange={(e) => setNewOrder({...newOrder, einheit: e.target.value})}
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
+                    placeholder="z.B. Flaschen, Stück"
+                    data-testid="unit-input"
                   />
-                </div>
-              </div>
-
-              </div>
-
-              {/* STOK YÖNETİMİ */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-                <div className="md:col-span-2 lg:col-span-4">
-                  <h5 className="text-white font-bold mb-3 flex items-center">
-                    📊 Stok Yönetimi
-                  </h5>
                 </div>
 
                 <div>
@@ -1893,9 +1768,8 @@ const UltraModernHospitalApp = () => {
                     type="number"
                     value={newOrder.anfangsBestand}
                     onChange={(e) => setNewOrder({...newOrder, anfangsBestand: parseInt(e.target.value) || 0})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-orange-500/50 focus:border-orange-400 transition-all duration-300 text-white placeholder-white/60"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-orange-500/50 focus:border-orange-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
                     placeholder="0"
-                    min="0"
                     data-testid="initial-stock-input"
                   />
                 </div>
@@ -1906,9 +1780,8 @@ const UltraModernHospitalApp = () => {
                     type="number"
                     value={newOrder.verteilteAnzahl}
                     onChange={(e) => setNewOrder({...newOrder, verteilteAnzahl: parseInt(e.target.value) || 0})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-red-500/50 focus:border-red-400 transition-all duration-300 text-white placeholder-white/60"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-red-500/50 focus:border-red-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
                     placeholder="0"
-                    min="0"
                     data-testid="distributed-quantity-input"
                   />
                 </div>
@@ -1919,9 +1792,8 @@ const UltraModernHospitalApp = () => {
                     type="number"
                     value={newOrder.mindestBestand}
                     onChange={(e) => setNewOrder({...newOrder, mindestBestand: parseInt(e.target.value) || 0})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-400 transition-all duration-300 text-white placeholder-white/60"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
                     placeholder="0"
-                    min="0"
                     data-testid="minimum-stock-input"
                   />
                 </div>
@@ -1932,97 +1804,18 @@ const UltraModernHospitalApp = () => {
                     type="number"
                     value={newOrder.maxBestand}
                     onChange={(e) => setNewOrder({...newOrder, maxBestand: parseInt(e.target.value) || 100})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-pink-500/50 focus:border-pink-400 transition-all duration-300 text-white placeholder-white/60"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-pink-500/50 focus:border-pink-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
                     placeholder="100"
-                    min="0"
                     data-testid="maximum-stock-input"
                   />
                 </div>
-              </div>
 
-              {/* TEDARİKÇİ BİLGİLERİ */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-                <div className="md:col-span-2 lg:col-span-3">
-                  <h5 className="text-white font-bold mb-3 flex items-center">
-                    🚛 Tedarikçi & Teslimat Bilgileri
-                  </h5>
-                </div>
-
-                <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Ana Tedarikçi</label>
-                  <input
-                    type="text"
-                    value={newOrder.lieferant}
-                    onChange={(e) => setNewOrder({...newOrder, lieferant: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-teal-500/50 focus:border-teal-400 transition-all duration-300 text-white placeholder-white/60"
-                    placeholder="z.B. Medizinischer Großhandel GmbH"
-                    data-testid="supplier-input"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Alternatif Tedarikçi</label>
-                  <input
-                    type="text"
-                    value={newOrder.alternatifTedarikci}
-                    onChange={(e) => setNewOrder({...newOrder, alternatifTedarikci: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-emerald-500/50 focus:border-emerald-400 transition-all duration-300 text-white placeholder-white/60"
-                    placeholder="z.B. Alternative Quelle"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Teslimat Süresi (Gün)</label>
-                  <input
-                    type="number"
-                    value={newOrder.teslimatSuresi}
-                    onChange={(e) => setNewOrder({...newOrder, teslimatSuresi: parseInt(e.target.value) || 0})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-violet-500/50 focus:border-violet-400 transition-all duration-300 text-white placeholder-white/60"
-                    placeholder="z.B. 3"
-                    min="0"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Bestelldatum</label>
-                  <input
-                    type="date"
-                    value={newOrder.bestelldatum}
-                    onChange={(e) => setNewOrder({...newOrder, bestelldatum: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 text-white"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Gewünschtes Lieferdatum</label>
-                  <input
-                    type="date"
-                    value={newOrder.lieferdatum || ''}
-                    onChange={(e) => setNewOrder({...newOrder, lieferdatum: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white"
-                    data-testid="delivery-date-input"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Son Kullanma Tarihi</label>
-                  <input
-                    type="date"
-                    value={newOrder.sonKullanmaTarihi}
-                    onChange={(e) => setNewOrder({...newOrder, sonKullanmaTarihi: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-orange-500/50 focus:border-orange-400 transition-all duration-300 text-white"
-                  />
-                </div>
-              </div>
-
-              {/* STATUS & PRİORİTE */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                 <div>
                   <label className="block text-white/80 text-sm font-bold mb-2">Status</label>
                   <select
                     value={newOrder.status}
                     onChange={(e) => setNewOrder({...newOrder, status: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-indigo-500/50 focus:border-indigo-400 transition-all duration-300 text-white"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-indigo-500/50 focus:border-indigo-400 transition-all duration-300 text-white text-sm md:text-base"
                     data-testid="status-select"
                   >
                     {statusOptions.map(s => (
@@ -2036,7 +1829,7 @@ const UltraModernHospitalApp = () => {
                   <select
                     value={newOrder.prioritaet}
                     onChange={(e) => setNewOrder({...newOrder, prioritaet: e.target.value})}
-                    className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white text-sm md:text-base"
                     data-testid="priority-select"
                   >
                     {prioritaetOptions.map(p => (
@@ -2044,54 +1837,78 @@ const UltraModernHospitalApp = () => {
                     ))}
                   </select>
                 </div>
+
+                <div>
+                  <label className="block text-white/80 text-sm font-bold mb-2">Lieferant</label>
+                  <input
+                    type="text"
+                    value={newOrder.lieferant}
+                    onChange={(e) => setNewOrder({...newOrder, lieferant: e.target.value})}
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-teal-500/50 focus:border-teal-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
+                    placeholder="z.B. Medizinischer Großhandel"
+                    data-testid="supplier-input"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-white/80 text-sm font-bold mb-2">Lieferdatum</label>
+                  <input
+                    type="date"
+                    value={newOrder.lieferdatum || ''}
+                    onChange={(e) => setNewOrder({...newOrder, lieferdatum: e.target.value})}
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white text-sm md:text-base"
+                    data-testid="delivery-date-input"
+                  />
+                </div>
               </div>
 
-              {/* NOTLAR */}
-              <div className="mt-6">
-                <label className="block text-white/80 text-sm font-bold mb-2">Notizen & Bemerkungen</label>
+              <div className="mt-4 md:mt-6">
+                <label className="block text-white/80 text-sm font-bold mb-2">Notizen</label>
                 <textarea
                   value={newOrder.notizen}
                   onChange={(e) => setNewOrder({...newOrder, notizen: e.target.value})}
-                  className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white placeholder-white/60 h-24 resize-none"
-                  placeholder="Zusätzliche Informationen, spezielle Anweisungen..."
+                  className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white placeholder-white/60 h-20 md:h-24 resize-none text-sm md:text-base"
+                  placeholder="Zusätzliche Informationen..."
                   data-testid="notes-textarea"
                 />
               </div>
 
-              {/* HESAPLAMA ÖZETİ */}
-              <div className="mt-6 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
-                <h4 className="text-white font-bold mb-3 flex items-center">
-                  🧮 Berechnungsübersicht
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                  <div>
-                    <span className="text-white/60">Formel:</span><br />
-                    <span className="text-cyan-400 font-mono">
-                      Anfang ({newOrder.anfangsBestand}) + Bestellung ({newOrder.menge}) - Verteilt ({newOrder.verteilteAnzahl})
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-white/60">Kosten Berechnung:</span><br />
-                    <span className="text-green-400 font-mono">
-                      {newOrder.menge} × {newOrder.birimFiyat}€ = {newOrder.toplamTutar.toFixed(2)}€
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-white/60">Lager Status:</span><br />
-                    <span className={`font-bold ${
-                      newOrder.lagerStatus === 'kritisch' ? 'text-red-400' :
-                      newOrder.lagerStatus === 'düşük' ? 'text-yellow-400' :
-                      newOrder.lagerStatus === 'yüksek' ? 'text-green-400' :
-                      'text-blue-400'
-                    }`}>
-                      {newOrder.lagerStatus.toUpperCase()}
-                    </span>
+              {/* ENHANCED CALCULATION DISPLAY */}
+              <div className="mt-4 md:mt-6 p-3 md:p-4 rounded-xl border" style={{
+                background: newOrder.lagerStatus === 'kritisch' ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1))' :
+                          newOrder.lagerStatus === 'düşük' ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1))' :
+                          newOrder.lagerStatus === 'yüksek' ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.1))' :
+                          'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1))',
+                borderColor: newOrder.lagerStatus === 'kritisch' ? 'rgba(239, 68, 68, 0.3)' :
+                           newOrder.lagerStatus === 'düşük' ? 'rgba(245, 158, 11, 0.3)' :
+                           newOrder.lagerStatus === 'yüksek' ? 'rgba(34, 197, 94, 0.3)' :
+                           'rgba(59, 130, 246, 0.3)'
+              }}>
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="text-white font-bold text-sm md:text-base flex items-center">
+                    {newOrder.lagerStatus === 'kritisch' ? '🚨' : 
+                     newOrder.lagerStatus === 'düşük' ? '⚠️' : 
+                     newOrder.lagerStatus === 'yüksek' ? '📈' : '✅'} 
+                     Berechneter aktueller Bestand:
+                  </h4>
+                  <div className={`text-xs font-bold px-2 py-1 rounded ${
+                    newOrder.lagerStatus === 'kritisch' ? 'bg-red-500/20 text-red-400' :
+                    newOrder.lagerStatus === 'düşük' ? 'bg-yellow-500/20 text-yellow-400' :
+                    newOrder.lagerStatus === 'yüksek' ? 'bg-green-500/20 text-green-400' :
+                    'bg-blue-500/20 text-blue-400'
+                  }`}>
+                    {newOrder.lagerStatus.toUpperCase()}
                   </div>
                 </div>
+                <p className="text-xl md:text-2xl font-black text-cyan-400">
+                  {newOrder.aktuellerBestand} {newOrder.bestandseinheit || newOrder.einheit || 'Stück'}
+                </p>
+                <p className="text-white/60 text-xs md:text-sm mt-1">
+                  Formel: Anfangsbestand ({newOrder.anfangsBestand}) + Neue Bestellung ({newOrder.menge}) - Verteilte Anzahl ({newOrder.verteilteAnzahl})
+                </p>
               </div>
 
-              {/* FORM BUTTONS */}
-              <div className="flex flex-col md:flex-row justify-end space-y-3 md:space-y-0 md:space-x-4 mt-8">
+              <div className="flex flex-col md:flex-row justify-end space-y-3 md:space-y-0 md:space-x-4 mt-6 md:mt-8">
                 <button
                   onClick={() => {
                     setShowAddForm(false);
@@ -2127,7 +1944,7 @@ const UltraModernHospitalApp = () => {
                       budgetKodu: ''
                     });
                   }}
-                  className="w-full md:w-auto px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white rounded-xl font-bold transition-all duration-300 transform hover:scale-105"
+                  className="w-full md:w-auto px-4 md:px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white rounded-xl md:rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 text-sm md:text-base"
                   data-testid="cancel-button"
                 >
                   ❌ Abbrechen
@@ -2135,13 +1952,12 @@ const UltraModernHospitalApp = () => {
                 <button
                   onClick={editingOrder ? handleUpdateOrder : handleAddOrder}
                   disabled={!newOrder.produktName || !newOrder.kategorie || newOrder.menge <= 0}
-                  className="w-full md:w-auto px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white rounded-xl font-bold transition-all duration-300 transform hover:scale-105 disabled:transform-none"
+                  className="w-full md:w-auto px-4 md:px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white rounded-xl md:rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 disabled:transform-none text-sm md:text-base"
                   data-testid="save-button"
                 >
                   {editingOrder ? '💾 Aktualisieren' : '🚀 Professionelle Bestellung erstellen'}
                 </button>
               </div>
-
             </div>
           </div>
         )}
