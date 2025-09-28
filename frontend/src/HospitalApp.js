@@ -1831,51 +1831,28 @@ const UltraModernHospitalApp = () => {
                   />
                 </div>
 
+                {/* OPTIONAL: Minimum Stock Warning */}
                 <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Anfangsbestand</label>
-                  <input
-                    type="number"
-                    value={newOrder.anfangsBestand}
-                    onChange={(e) => setNewOrder({...newOrder, anfangsBestand: parseInt(e.target.value) || 0})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-orange-500/50 focus:border-orange-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
-                    placeholder="0"
-                    data-testid="initial-stock-input"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Verteilte Anzahl</label>
-                  <input
-                    type="number"
-                    value={newOrder.verteilteAnzahl}
-                    onChange={(e) => setNewOrder({...newOrder, verteilteAnzahl: parseInt(e.target.value) || 0})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-red-500/50 focus:border-red-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
-                    placeholder="0"
-                    data-testid="distributed-quantity-input"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Mindestbestand</label>
+                  <label className="block text-white/80 text-sm font-bold mb-2">Mindestbestand (optional)</label>
                   <input
                     type="number"
                     value={newOrder.mindestBestand}
                     onChange={(e) => setNewOrder({...newOrder, mindestBestand: parseInt(e.target.value) || 0})}
                     className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
-                    placeholder="0"
+                    placeholder="Für Warnungen (optional)"
                     data-testid="minimum-stock-input"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Maximaler Bestand</label>
+                  <label className="block text-white/80 text-sm font-bold mb-2">Lieferant</label>
                   <input
-                    type="number"
-                    value={newOrder.maxBestand}
-                    onChange={(e) => setNewOrder({...newOrder, maxBestand: parseInt(e.target.value) || 100})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-pink-500/50 focus:border-pink-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
-                    placeholder="100"
-                    data-testid="maximum-stock-input"
+                    type="text"
+                    value={newOrder.lieferant}
+                    onChange={(e) => setNewOrder({...newOrder, lieferant: e.target.value})}
+                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-teal-500/50 focus:border-teal-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
+                    placeholder="z.B. Medizinischer Großhandel"
+                    data-testid="supplier-input"
                   />
                 </div>
 
@@ -1908,18 +1885,6 @@ const UltraModernHospitalApp = () => {
                 </div>
 
                 <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Lieferant</label>
-                  <input
-                    type="text"
-                    value={newOrder.lieferant}
-                    onChange={(e) => setNewOrder({...newOrder, lieferant: e.target.value})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-teal-500/50 focus:border-teal-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
-                    placeholder="z.B. Medizinischer Großhandel"
-                    data-testid="supplier-input"
-                  />
-                </div>
-
-                <div>
                   <label className="block text-white/80 text-sm font-bold mb-2">Lieferdatum</label>
                   <input
                     type="date"
@@ -1942,7 +1907,7 @@ const UltraModernHospitalApp = () => {
                 />
               </div>
 
-              {/* ENHANCED CALCULATION DISPLAY */}
+              {/* SIMPLIFIED CALCULATION DISPLAY */}
               <div className="mt-4 md:mt-6 p-3 md:p-4 rounded-xl border" style={{
                 background: newOrder.lagerStatus === 'kritisch' ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1))' :
                           newOrder.lagerStatus === 'niedrig' ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1))' :
@@ -1958,7 +1923,7 @@ const UltraModernHospitalApp = () => {
                     {newOrder.lagerStatus === 'kritisch' ? '🚨' : 
                      newOrder.lagerStatus === 'niedrig' ? '⚠️' : 
                      newOrder.lagerStatus === 'hoch' ? '📈' : '✅'} 
-                     Berechneter aktueller Bestand:
+                     Bestellmenge:
                   </h4>
                   <div className={`text-xs font-bold px-2 py-1 rounded ${
                     newOrder.lagerStatus === 'kritisch' ? 'bg-red-500/20 text-red-400' :
@@ -1970,10 +1935,10 @@ const UltraModernHospitalApp = () => {
                   </div>
                 </div>
                 <p className="text-xl md:text-2xl font-black text-cyan-400">
-                  {newOrder.aktuellerBestand} {newOrder.bestandseinheit || newOrder.einheit || 'Stück'}
+                  {newOrder.aktuellerBestand} {newOrder.einheit || 'Stück'}
                 </p>
                 <p className="text-white/60 text-xs md:text-sm mt-1">
-                  Formel: Anfangsbestand ({newOrder.anfangsBestand}) + Neue Bestellung ({newOrder.menge}) - Verteilte Anzahl ({newOrder.verteilteAnzahl})
+                  Einfache Bestellmenge ohne komplexe Berechnungen
                 </p>
                 
                 {/* Existing Product Info */}
