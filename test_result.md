@@ -157,3 +157,5 @@ agent_communication:
       message: "Starting comprehensive testing of the new professional order form with enhanced features including smart calculations, inventory status warnings, smart suggestions, and real-time feedback systems."
     - agent: "testing"
       message: "PROFESSIONAL ORDER FORM TESTING COMPLETE ✅ All enhanced features working perfectly! Successfully tested: Form access with professional title, all core and enhanced fields (SKU, unit price, supplier info), smart calculations (10×2.50€=25.00€), inventory status warnings, smart order suggestions (18 Flaschen recommended), real-time cost summary, stock management calculations, form save/cancel functionality, and mobile responsiveness. New orders are successfully created and appear in the order list. The professional upgrade is fully functional and ready for production use."
+    - agent: "testing"
+      message: "Starting comprehensive testing of the new intelligent stock management system with German interface. Testing focus: price fields removal, intelligent stock detection, stock merging functionality, real-time product detection, and German language alerts."
