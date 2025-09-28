@@ -681,7 +681,7 @@ const UltraModernHospitalApp = () => {
   const themes = {
     modern: {
       name: '🌈 Modern Rainbow',
-      description: 'Canlı gradyan tasarım (Default)',
+      description: 'Lebendiges Farbdesign (Standard)',
       light: {
         background: 'from-indigo-900 via-purple-900 to-pink-900',
         header: 'bg-white/10 backdrop-blur-xl border-white/20',
@@ -710,8 +710,8 @@ const UltraModernHospitalApp = () => {
       }
     },
     corporate: {
-      name: '🏢 Corporate Blue',
-      description: 'Profesyonel mavi tonları',
+      name: '🏢 Corporate Blau',
+      description: 'Professionelle blaue Töne',
       light: {
         background: 'from-blue-900 via-indigo-900 to-slate-900',
         header: 'bg-blue-900/80 backdrop-blur-xl border-blue-700/30',
@@ -740,8 +740,8 @@ const UltraModernHospitalApp = () => {
       }
     },
     medical: {
-      name: '🏥 Medical Green',
-      description: 'Hastane yeşil/beyaz teması',
+      name: '🏥 Medical Grün',
+      description: 'Krankenhaus grün/weiß Design',
       light: {
         background: 'from-emerald-900 via-teal-900 to-green-900',
         header: 'bg-emerald-900/80 backdrop-blur-xl border-emerald-700/30',
