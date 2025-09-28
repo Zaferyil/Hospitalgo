@@ -828,23 +828,13 @@ const UltraModernHospitalApp = () => {
     lieferdatum: '',
     status: 'Bestellt',
     notizen: '',
-    mindestBestand: 0,
-    maxBestand: 100,
+    mindestBestand: 0, // Nur für Warnungen
     prioritaet: 'Normal',
     aktuellerBestand: 0,
-    verteilteAnzahl: 0,
-    verteilungseinheit: 'Stück',
-    bestandseinheit: 'Stück',
-    anfangsBestand: 0,
-    erhalteneBestellungen: 0,
-    // 🆕 PROFESSIONAL FEATURES - NO PRICE FIELDS
+    // 🆕 SIMPLIFIED FEATURES - Only Essential Fields
     sku: '',
-    teslimatSuresi: 0,
-    alternatifTedarikci: '',
-    sonKullanmaTarihi: '',
-    lagerStatus: 'normal', // kritisch, niedrig, normal, hoch
-    otomatikSiparisOneri: 0,
-    budgetKodu: ''
+    lagerStatus: 'normal',
+    otomatikSiparisOneri: 0
   });
 
   // 🧮 SIMPLIFIED CALCULATION ENGINE - Fixed Logic
