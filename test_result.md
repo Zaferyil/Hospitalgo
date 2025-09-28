@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test the new professional 'Neue Bestellung' (New Order) form with enhanced features including smart calculations, inventory status, smart suggestions, enhanced fields, and real-time feedback"
+user_problem_statement: "Test the new intelligent stock management system with German interface - price fields removal, intelligent stock detection, stock merging functionality, and real-time product detection"
 
 frontend:
   - task: "Remove Made with Emergent logo"
