@@ -150,6 +150,18 @@ frontend:
           agent: "testing"
           comment: "Starting comprehensive testing of the new Professional Action Toolbar implementation. Testing focus: Clean header design (only logo, search, Reports button), Professional Action Bar positioning below header, Primary actions (🛒 Neue Bestellung Green, 📦 Lagereingang Blue, 📤 Lagerausgang Red), Secondary actions (📊 Excel Export Emerald, 📄 PDF Export Purple), Professional appearance with modern gradient backgrounds, hover effects, responsive design for desktop/tablet/mobile, workflow integration, and performance standards."
 
+  - task: "Theme System German Language and Visibility Fix Testing"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/HospitalApp.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "testing"
+          comment: "Starting comprehensive testing of the fixed theme system with German language support and visibility improvements. Testing focus: German language implementation (🎨 Design button, 'Design auswählen' dropdown header, German theme names), Visibility fixes (solid dark dropdown background, readable text), Theme switching functionality (Modern Rainbow, Corporate Blau, Medical Grün), Dark/Light mode integration, Theme persistence across page refreshes, Card and button styling integration with themes, and overall UI consistency across all theme combinations."
+
 metadata:
   created_by: "main_agent"
   version: "1.1"
