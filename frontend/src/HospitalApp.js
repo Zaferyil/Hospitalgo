@@ -1539,9 +1539,55 @@ const UltraModernHospitalApp = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-4">
+              {/* THEME SELECTOR */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowThemeSelector(!showThemeSelector)}
+                  className={`bg-gradient-to-r ${getCurrentThemeStyles().button.secondary} text-white px-3 md:px-4 py-2 md:py-2.5 rounded-xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm`}
+                  data-testid="theme-selector-button"
+                >
+                  <span>🎨</span>
+                  <span className="hidden lg:inline">Tema</span>
+                </button>
+
+                {/* Theme Dropdown */}
+                {showThemeSelector && (
+                  <div className="absolute right-0 top-12 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl p-3 min-w-64 z-50">
+                    <h4 className={`font-bold mb-3 ${getCurrentThemeStyles().text}`}>🎨 Tema Seçenekleri</h4>
+                    
+                    {/* Theme Options */}
+                    {Object.entries(themes).map(([key, theme]) => (
+                      <button
+                        key={key}
+                        onClick={() => {
+                          setCurrentTheme(key);
+                          setShowThemeSelector(false);
+                        }}
+                        className={`w-full text-left p-3 rounded-lg mb-2 transition-all duration-300 hover:bg-white/10 ${
+                          currentTheme === key ? 'bg-white/20 border border-white/30' : 'border border-transparent'
+                        }`}
+                      >
+                        <div className={`font-bold ${getCurrentThemeStyles().text}`}>{theme.name}</div>
+                        <div className={`text-xs ${getCurrentThemeStyles().textSecondary}`}>{theme.description}</div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* LIGHT/DARK TOGGLE */}
+              <button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className={`bg-gradient-to-r ${isDarkMode ? 'from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600' : 'from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600'} text-white px-3 md:px-4 py-2 md:py-2.5 rounded-xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm`}
+                data-testid="dark-mode-toggle"
+              >
+                <span>{isDarkMode ? '☀️' : '🌙'}</span>
+                <span className="hidden lg:inline">{isDarkMode ? 'Light' : 'Dark'}</span>
+              </button>
+
               <button
                 onClick={handleReportsClick}
-                className="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base"
+                className={`bg-gradient-to-r ${getCurrentThemeStyles().button.secondary} text-white px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base`}
                 data-testid="reports-button"
               >
                 <BarChart3 className="h-4 md:h-5 w-4 md:w-5" />
