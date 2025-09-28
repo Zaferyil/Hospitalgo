@@ -1538,16 +1538,44 @@ const UltraModernHospitalApp = () => {
                   </button>
                 </div>
 
+                {/* PROFESSIONAL MOBILE BUTTONS */}
                 <button
                   onClick={() => {
+                    setTransactionType('neue_bestellung');
                     setShowAddForm(true);
                     setShowMobileMenu(false);
                   }}
                   className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm"
-                  data-testid="mobile-add-order-button"
+                  data-testid="mobile-new-order-button"
                 >
                   <Plus className="h-4 w-4" />
-                  <span>➕ Neue Bestellung</span>
+                  <span>🛒 Neue Bestellung</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setTransactionType('stok_eingang');
+                    setShowAddForm(true);
+                    setShowMobileMenu(false);
+                  }}
+                  className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm"
+                  data-testid="mobile-stock-entry-button"
+                >
+                  <Package className="h-4 w-4" />
+                  <span>📦 Lagereingang</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setTransactionType('stok_ausgang');
+                    setShowAddForm(true);
+                    setShowMobileMenu(false);
+                  }}
+                  className="bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm"
+                  data-testid="mobile-stock-exit-button"
+                >
+                  <Minus className="h-4 w-4" />
+                  <span>📤 Lagerausgang</span>
                 </button>
               </div>
             </div>
