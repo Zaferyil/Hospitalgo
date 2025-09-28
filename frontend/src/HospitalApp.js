@@ -967,8 +967,10 @@ const UltraModernHospitalApp = () => {
       alert(`✅ Lagerausgang erfolgreich gebucht!\n\nDatum: ${transactionDateFormatted}\nProdukt: ${existingProduct.produktName}\nMenge: -${transactionAmount} ${existingProduct.einheit || 'Stück'}\nNeuer Bestand: ${newStockLevel} ${existingProduct.einheit || 'Stück'}${warningText}`);
     }
 
-    // Reset form
+    // Reset form and close modal
     resetTransactionForm();
+    setShowAddForm(false); // Close the form modal
+    setEditingOrder(null);
   };
 
   const resetTransactionForm = () => {
