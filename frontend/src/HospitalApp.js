@@ -1960,25 +1960,25 @@ const UltraModernHospitalApp = () => {
               {/* ENHANCED CALCULATION DISPLAY */}
               <div className="mt-4 md:mt-6 p-3 md:p-4 rounded-xl border" style={{
                 background: newOrder.lagerStatus === 'kritisch' ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1))' :
-                          newOrder.lagerStatus === 'düşük' ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1))' :
-                          newOrder.lagerStatus === 'yüksek' ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.1))' :
+                          newOrder.lagerStatus === 'niedrig' ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1))' :
+                          newOrder.lagerStatus === 'hoch' ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.1))' :
                           'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1))',
                 borderColor: newOrder.lagerStatus === 'kritisch' ? 'rgba(239, 68, 68, 0.3)' :
-                           newOrder.lagerStatus === 'düşük' ? 'rgba(245, 158, 11, 0.3)' :
-                           newOrder.lagerStatus === 'yüksek' ? 'rgba(34, 197, 94, 0.3)' :
+                           newOrder.lagerStatus === 'niedrig' ? 'rgba(245, 158, 11, 0.3)' :
+                           newOrder.lagerStatus === 'hoch' ? 'rgba(34, 197, 94, 0.3)' :
                            'rgba(59, 130, 246, 0.3)'
               }}>
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="text-white font-bold text-sm md:text-base flex items-center">
                     {newOrder.lagerStatus === 'kritisch' ? '🚨' : 
-                     newOrder.lagerStatus === 'düşük' ? '⚠️' : 
-                     newOrder.lagerStatus === 'yüksek' ? '📈' : '✅'} 
+                     newOrder.lagerStatus === 'niedrig' ? '⚠️' : 
+                     newOrder.lagerStatus === 'hoch' ? '📈' : '✅'} 
                      Berechneter aktueller Bestand:
                   </h4>
                   <div className={`text-xs font-bold px-2 py-1 rounded ${
                     newOrder.lagerStatus === 'kritisch' ? 'bg-red-500/20 text-red-400' :
-                    newOrder.lagerStatus === 'düşük' ? 'bg-yellow-500/20 text-yellow-400' :
-                    newOrder.lagerStatus === 'yüksek' ? 'bg-green-500/20 text-green-400' :
+                    newOrder.lagerStatus === 'niedrig' ? 'bg-yellow-500/20 text-yellow-400' :
+                    newOrder.lagerStatus === 'hoch' ? 'bg-green-500/20 text-green-400' :
                     'bg-blue-500/20 text-blue-400'
                   }`}>
                     {newOrder.lagerStatus.toUpperCase()}
@@ -1990,6 +1990,15 @@ const UltraModernHospitalApp = () => {
                 <p className="text-white/60 text-xs md:text-sm mt-1">
                   Formel: Anfangsbestand ({newOrder.anfangsBestand}) + Neue Bestellung ({newOrder.menge}) - Verteilte Anzahl ({newOrder.verteilteAnzahl})
                 </p>
+                
+                {/* Existing Product Info */}
+                {existingProduct && (
+                  <div className="mt-3 p-2 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                    <p className="text-blue-300 text-sm">
+                      📊 Nach Zusammenführung: <strong>{existingProduct.aktuellerBestand + (parseInt(newOrder.menge) || 0)} {existingProduct.einheit || 'Stück'}</strong>
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div className="flex flex-col md:flex-row justify-end space-y-3 md:space-y-0 md:space-x-4 mt-6 md:mt-8">
