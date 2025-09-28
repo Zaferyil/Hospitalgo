@@ -1900,10 +1900,10 @@ const UltraModernHospitalApp = () => {
         {viewMode === 'cards' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
             {filteredOrders.map((order) => (
-              <div key={order.id} className="backdrop-blur-xl bg-white/10 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl border border-white/20 transform hover:scale-105 transition-all duration-500">
+              <div key={order.id} className={`backdrop-blur-xl ${getCurrentThemeStyles().card} rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl border transform hover:scale-105 transition-all duration-500`}>
                 <div className="flex justify-between items-start mb-3 md:mb-4">
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-lg md:text-xl font-black text-white mb-2 truncate" data-testid={`order-title-${order.id}`} title={order.produktName}>
+                    <h3 className={`text-lg md:text-xl font-black ${getCurrentThemeStyles().text} mb-2 truncate`} data-testid={`order-title-${order.id}`} title={order.produktName}>
                       {order.produktName}
                     </h3>
                     <div className="flex flex-wrap gap-1 md:gap-2 mb-2 md:mb-3">
@@ -1921,14 +1921,14 @@ const UltraModernHospitalApp = () => {
                   <div className="flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-2 ml-2">
                     <button
                       onClick={() => handleEditOrder(order)}
-                      className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-lg md:rounded-xl transition-all duration-300 transform hover:scale-110 shadow-lg"
+                      className={`p-2 bg-gradient-to-r ${getCurrentThemeStyles().button.secondary} text-white rounded-lg md:rounded-xl transition-all duration-300 transform hover:scale-110 shadow-lg`}
                       data-testid={`edit-order-${order.id}`}
                     >
                       <Edit className="h-3 md:h-4 w-3 md:w-4" />
                     </button>
                     <button
                       onClick={() => handleDeleteOrder(order.id)}
-                      className="p-2 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-lg md:rounded-xl transition-all duration-300 transform hover:scale-110 shadow-lg"
+                      className={`p-2 bg-gradient-to-r ${getCurrentThemeStyles().button.danger} text-white rounded-lg md:rounded-xl transition-all duration-300 transform hover:scale-110 shadow-lg`}
                       data-testid={`delete-order-${order.id}`}
                     >
                       <Trash2 className="h-3 md:h-4 w-3 md:w-4" />
@@ -1936,13 +1936,13 @@ const UltraModernHospitalApp = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 md:gap-4 text-white mb-3 md:mb-4">
+                <div className={`grid grid-cols-2 gap-3 md:gap-4 ${getCurrentThemeStyles().text} mb-3 md:mb-4`}>
                   <div>
-                    <p className="text-white/60 text-xs font-semibold uppercase">Menge</p>
+                    <p className={`${getCurrentThemeStyles().textSecondary} text-xs font-semibold uppercase`}>Menge</p>
                     <p className="font-bold text-sm md:text-lg truncate">{order.menge} {order.einheit}</p>
                   </div>
                   <div>
-                    <p className="text-white/60 text-xs font-semibold uppercase">Aktueller Bestand</p>
+                    <p className={`${getCurrentThemeStyles().textSecondary} text-xs font-semibold uppercase`}>Aktueller Bestand</p>
                     <p className={`font-bold text-sm md:text-lg truncate ${
                       getLagerStatus(order) === 'kritisch' ? 'text-red-400' :
                       getLagerStatus(order) === 'niedrig' ? 'text-yellow-400' : 'text-green-400'
