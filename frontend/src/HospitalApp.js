@@ -1964,50 +1964,50 @@ const UltraModernHospitalApp = () => {
               )}
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                <div className="md:col-span-2 lg:col-span-1">
-                  <label className="block text-white/80 text-sm font-bold mb-2">Produktname *</label>
-                  <input
-                    type="text"
-                    value={newOrder.produktName}
-                    onChange={(e) => {
-                      setNewOrder({...newOrder, produktName: e.target.value});
-                      // Check for existing product in real-time
-                      setTimeout(() => checkExistingProduct(e.target.value), 500);
-                    }}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
-                    placeholder="z.B. Mineralwasser 1,5L"
-                    data-testid="product-name-input"
-                  />
-                </div>
+                {/* PRODUCT NAME - Only for new orders */}
+                {transactionType === 'neue_bestellung' && (
+                  <div className="md:col-span-2 lg:col-span-1">
+                    <label className="block text-white/80 text-sm font-bold mb-2">Produktname *</label>
+                    <input
+                      type="text"
+                      value={newOrder.produktName}
+                      onChange={(e) => {
+                        setNewOrder({...newOrder, produktName: e.target.value});
+                        // Check for existing product in real-time
+                        setTimeout(() => checkExistingProduct(e.target.value), 500);
+                      }}
+                      className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
+                      placeholder="z.B. Mineralwasser 1,5L"
+                      data-testid="product-name-input"
+                    />
+                  </div>
+                )}
 
-                <div className="md:col-span-2 lg:col-span-1">
-                  <label className="block text-white/80 text-sm font-bold mb-2">SKU/Artikel-Nr.</label>
-                  <input
-                    type="text"
-                    value={newOrder.sku}
-                    onChange={(e) => setNewOrder({...newOrder, sku: e.target.value})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-gray-500/50 focus:border-gray-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
-                    placeholder="z.B. MW-150-PR"
-                  />
-                </div>
+                {/* CATEGORY - Only for new orders */}
+                {transactionType === 'neue_bestellung' && (
+                  <div className="md:col-span-2 lg:col-span-1">
+                    <label className="block text-white/80 text-sm font-bold mb-2">Kategorie *</label>
+                    <select
+                      value={newOrder.kategorie}
+                      onChange={(e) => setNewOrder({...newOrder, kategorie: e.target.value})}
+                      className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white text-sm md:text-base"
+                      data-testid="category-select"
+                    >
+                      <option value="" className="bg-gray-800">Kategorie wählen</option>
+                      {kategorien.map(k => (
+                        <option key={k} value={k} className="bg-gray-800">{k}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
 
-                <div className="md:col-span-2 lg:col-span-1">
-                  <label className="block text-white/80 text-sm font-bold mb-2">Kategorie *</label>
-                  <select
-                    value={newOrder.kategorie}
-                    onChange={(e) => setNewOrder({...newOrder, kategorie: e.target.value})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white text-sm md:text-base"
-                    data-testid="category-select"
-                  >
-                    <option value="" className="bg-gray-800">Kategorie wählen</option>
-                    {kategorien.map(k => (
-                      <option key={k} value={k} className="bg-gray-800">{k}</option>
-                    ))}
-                  </select>
-                </div>
-
+                {/* QUANTITY - Dynamic label based on transaction type */}
                 <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Bestellmenge *</label>
+                  <label className="block text-white/80 text-sm font-bold mb-2">
+                    {transactionType === 'stok_eingang' ? 'Eingangsmenge *' :
+                     transactionType === 'stok_ausgang' ? 'Ausgangsmenge *' :
+                     'Bestellmenge *'}
+                  </label>
                   <input
                     type="number"
                     value={newOrder.menge}
@@ -2016,92 +2016,121 @@ const UltraModernHospitalApp = () => {
                     placeholder="0"
                     data-testid="quantity-input"
                   />
+                  {transactionType === 'stok_ausgang' && existingProduct && newOrder.menge > existingProduct.aktuellerBestand && (
+                    <p className="text-red-400 text-xs mt-1">
+                      ⚠️ Nicht genügend Bestand! Verfügbar: {existingProduct.aktuellerBestand} {existingProduct.einheit || 'Stück'}
+                    </p>
+                  )}
                 </div>
 
+                {/* UNIT - Only for new orders or show existing */}
                 <div>
                   <label className="block text-white/80 text-sm font-bold mb-2">Einheit</label>
-                  <input
-                    type="text"
-                    value={newOrder.einheit}
-                    onChange={(e) => setNewOrder({...newOrder, einheit: e.target.value})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
-                    placeholder="z.B. Flaschen, Stück"
-                    data-testid="unit-input"
-                  />
+                  {transactionType === 'neue_bestellung' ? (
+                    <input
+                      type="text"
+                      value={newOrder.einheit}
+                      onChange={(e) => setNewOrder({...newOrder, einheit: e.target.value})}
+                      className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-blue-500/50 focus:border-blue-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
+                      placeholder="z.B. Flaschen, Stück"
+                      data-testid="unit-input"
+                    />
+                  ) : (
+                    <input
+                      type="text"
+                      value={existingProduct?.einheit || 'Stück'}
+                      disabled
+                      className="w-full px-3 md:px-4 py-2 md:py-3 bg-gray-500/20 border border-gray-500/30 rounded-xl md:rounded-2xl text-gray-400 text-sm md:text-base"
+                    />
+                  )}
                 </div>
 
-                {/* OPTIONAL: Minimum Stock Warning */}
-                <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Mindestbestand (optional)</label>
-                  <input
-                    type="number"
-                    value={newOrder.mindestBestand}
-                    onChange={(e) => setNewOrder({...newOrder, mindestBestand: parseInt(e.target.value) || 0})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
-                    placeholder="Für Warnungen (optional)"
-                    data-testid="minimum-stock-input"
-                  />
-                </div>
+                {/* Show fewer fields for stock transactions */}
+                {transactionType === 'neue_bestellung' && (
+                  <>
+                    {/* OPTIONAL: Minimum Stock Warning */}
+                    <div>
+                      <label className="block text-white/80 text-sm font-bold mb-2">Mindestbestand (optional)</label>
+                      <input
+                        type="number"
+                        value={newOrder.mindestBestand}
+                        onChange={(e) => setNewOrder({...newOrder, mindestBestand: parseInt(e.target.value) || 0})}
+                        className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
+                        placeholder="Für Warnungen (optional)"
+                        data-testid="minimum-stock-input"
+                      />
+                    </div>
 
-                <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Lieferant</label>
-                  <input
-                    type="text"
-                    value={newOrder.lieferant}
-                    onChange={(e) => setNewOrder({...newOrder, lieferant: e.target.value})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-teal-500/50 focus:border-teal-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
-                    placeholder="z.B. Medizinischer Großhandel"
-                    data-testid="supplier-input"
-                  />
-                </div>
+                    <div>
+                      <label className="block text-white/80 text-sm font-bold mb-2">Lieferant</label>
+                      <input
+                        type="text"
+                        value={newOrder.lieferant}
+                        onChange={(e) => setNewOrder({...newOrder, lieferant: e.target.value})}
+                        className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-teal-500/50 focus:border-teal-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
+                        placeholder="z.B. Medizinischer Großhandel"
+                        data-testid="supplier-input"
+                      />
+                    </div>
 
-                <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Status</label>
-                  <select
-                    value={newOrder.status}
-                    onChange={(e) => setNewOrder({...newOrder, status: e.target.value})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-indigo-500/50 focus:border-indigo-400 transition-all duration-300 text-white text-sm md:text-base"
-                    data-testid="status-select"
-                  >
-                    {statusOptions.map(s => (
-                      <option key={s} value={s} className="bg-gray-800">{s}</option>
-                    ))}
-                  </select>
-                </div>
+                    <div>
+                      <label className="block text-white/80 text-sm font-bold mb-2">Status</label>
+                      <select
+                        value={newOrder.status}
+                        onChange={(e) => setNewOrder({...newOrder, status: e.target.value})}
+                        className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-indigo-500/50 focus:border-indigo-400 transition-all duration-300 text-white text-sm md:text-base"
+                        data-testid="status-select"
+                      >
+                        {statusOptions.map(s => (
+                          <option key={s} value={s} className="bg-gray-800">{s}</option>
+                        ))}
+                      </select>
+                    </div>
 
-                <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Priorität</label>
-                  <select
-                    value={newOrder.prioritaet}
-                    onChange={(e) => setNewOrder({...newOrder, prioritaet: e.target.value})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white text-sm md:text-base"
-                    data-testid="priority-select"
-                  >
-                    {prioritaetOptions.map(p => (
-                      <option key={p} value={p} className="bg-gray-800">{p}</option>
-                    ))}
-                  </select>
-                </div>
+                    <div>
+                      <label className="block text-white/80 text-sm font-bold mb-2">Priorität</label>
+                      <select
+                        value={newOrder.prioritaet}
+                        onChange={(e) => setNewOrder({...newOrder, prioritaet: e.target.value})}
+                        className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white text-sm md:text-base"
+                        data-testid="priority-select"
+                      >
+                        {prioritaetOptions.map(p => (
+                          <option key={p} value={p} className="bg-gray-800">{p}</option>
+                        ))}
+                      </select>
+                    </div>
 
-                <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Lieferdatum</label>
-                  <input
-                    type="date"
-                    value={newOrder.lieferdatum || ''}
-                    onChange={(e) => setNewOrder({...newOrder, lieferdatum: e.target.value})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white text-sm md:text-base"
-                    data-testid="delivery-date-input"
-                  />
-                </div>
+                    <div>
+                      <label className="block text-white/80 text-sm font-bold mb-2">Lieferdatum</label>
+                      <input
+                        type="date"
+                        value={newOrder.lieferdatum || ''}
+                        onChange={(e) => setNewOrder({...newOrder, lieferdatum: e.target.value})}
+                        className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white text-sm md:text-base"
+                        data-testid="delivery-date-input"
+                      />
+                    </div>
+                  </>
+                )}
               </div>
 
+              {/* NOTES - Always show */}
               <div className="mt-4 md:mt-6">
-                <label className="block text-white/80 text-sm font-bold mb-2">Notizen</label>
+                <label className="block text-white/80 text-sm font-bold mb-2">
+                  {transactionType === 'stok_eingang' ? 'Eingangsnotizen' :
+                   transactionType === 'stok_ausgang' ? 'Ausgangsnotizen' :
+                   'Notizen'}
+                </label>
                 <textarea
                   value={newOrder.notizen}
                   onChange={(e) => setNewOrder({...newOrder, notizen: e.target.value})}
                   className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-400 transition-all duration-300 text-white placeholder-white/60 h-20 md:h-24 resize-none text-sm md:text-base"
-                  placeholder="Zusätzliche Informationen..."
+                  placeholder={
+                    transactionType === 'stok_eingang' ? 'z.B. Neue Lieferung von Lieferant XY' :
+                    transactionType === 'stok_ausgang' ? 'z.B. Verbrauch Station A' :
+                    'Zusätzliche Informationen...'
+                  }
                   data-testid="notes-textarea"
                 />
               </div>
