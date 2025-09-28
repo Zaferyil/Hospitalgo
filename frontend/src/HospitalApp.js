@@ -1033,57 +1033,7 @@ const UltraModernHospitalApp = () => {
     setShowAddForm(false); // Close the form modal
     setEditingOrder(null);
   };
-    if (newOrder.produktName && newOrder.kategorie && newOrder.menge > 0) {
-      const anfangsBestand = parseInt((newOrder.anfangsBestand || 0).toString()) || 0;
-      const erhalteneBestellungen = parseInt((newOrder.menge || 0).toString()) || 0;
-      const verteilteAnzahl = parseInt((newOrder.verteilteAnzahl || 0).toString()) || 0;
-      const aktuellerBestand = anfangsBestand + erhalteneBestellungen - verteilteAnzahl;
 
-      const order = {
-        ...newOrder,
-        id: Math.max(...orders.map(o => o.id), 0) + 1,
-        menge: parseInt(newOrder.menge.toString()),
-        mindestBestand: parseInt((newOrder.mindestBestand || 0).toString()) || 0,
-        maxBestand: parseInt((newOrder.maxBestand || 100).toString()) || 100,
-        anfangsBestand: anfangsBestand,
-        erhalteneBestellungen: erhalteneBestellungen,
-        verteilteAnzahl: verteilteAnzahl,
-        aktuellerBestand: aktuellerBestand,
-        lieferdatum: newOrder.lieferdatum || null
-      };
-      setOrders([...orders, order]);
-      setNewOrder({
-        id: 0,
-        produktName: '',
-        kategorie: '',
-        menge: 0,
-        einheit: '',
-        lieferant: '',
-        bestelldatum: new Date().toISOString().split('T')[0],
-        lieferdatum: '',
-        status: 'Bestellt',
-        notizen: '',
-        mindestBestand: 0,
-        maxBestand: 100,
-        prioritaet: 'Normal',
-        aktuellerBestand: 0,
-        verteilteAnzahl: 0,
-        verteilungseinheit: 'Stück',
-        bestandseinheit: 'Stück',
-        anfangsBestand: 0,
-        erhalteneBestellungen: 0,
-        // 🆕 PROFESSIONAL FEATURES
-        sku: '',
-        teslimatSuresi: 0,
-        alternatifTedarikci: '',
-        sonKullanmaTarihi: '',
-        lagerStatus: 'normal',
-        otomatikSiparisOneri: 0,
-        budgetKodu: ''
-      });
-      setShowAddForm(false);
-    }
-  };
 
   const handleEditOrder = (order) => {
     setEditingOrder(order.id);
