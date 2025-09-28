@@ -194,7 +194,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Mobile Duplicate Button Fix Testing"
     - "Theme System German Language and Visibility Fix Testing"
     - "Professional Action Toolbar Testing"
   stuck_tasks: []
