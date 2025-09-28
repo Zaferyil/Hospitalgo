@@ -773,7 +773,9 @@ const UltraModernHospitalApp = () => {
 
   const getCurrentThemeStyles = () => {
     const themeData = themes[currentTheme] || themes.modern;
-    return isDarkMode ? themeData.dark : themeData.light;
+    const styles = isDarkMode ? themeData.dark : themeData.light;
+    console.log('🎨 Theme Debug:', { currentTheme, isDarkMode, themeData: !!themeData, styles: !!styles });
+    return styles;
   };
 
   const [orders, setOrders] = useState([
