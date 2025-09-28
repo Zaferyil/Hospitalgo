@@ -1005,8 +1005,6 @@ const UltraModernHospitalApp = () => {
       anfangsBestand: 0,
       erhalteneBestellungen: 0,
       // 🆕 PROFESSIONAL FEATURES
-      birimFiyat: 0,
-      toplamTutar: 0,
       sku: '',
       teslimatSuresi: 0,
       alternatifTedarikci: '',
