@@ -2042,7 +2042,7 @@ const UltraModernHospitalApp = () => {
                   className="w-full md:w-auto px-4 md:px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white rounded-xl md:rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 disabled:transform-none text-sm md:text-base"
                   data-testid="save-button"
                 >
-                  {editingOrder ? '💾 Aktualisieren' : '🚀 Professionelle Bestellung erstellen'}
+                  {editingOrder ? '💾 Aktualisieren' : '📦 Intelligente Bestellung erstellen'}
                 </button>
               </div>
             </div>
