@@ -1485,7 +1485,33 @@ const UltraModernHospitalApp = () => {
                   </button>
                 </div>
 
-                {/* PROFESSIONAL MOBILE BUTTONS */}
+                {/* EXPORT ACTIONS */}
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <button
+                    onClick={() => {
+                      exportToExcel();
+                      setShowMobileMenu(false);
+                    }}
+                    className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm"
+                    data-testid="mobile-export-excel-button"
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>📊 Excel</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      exportToPDF();
+                      setShowMobileMenu(false);
+                    }}
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-bold transition-all duration-300 text-sm"
+                    data-testid="mobile-export-pdf-button"
+                  >
+                    <FileText className="h-4 w-4" />
+                    <span>📄 PDF</span>
+                  </button>
+                </div>
+
+                {/* STOCK MANAGEMENT ACTIONS */}
                 <button
                   onClick={() => {
                     setTransactionType('neue_bestellung');
