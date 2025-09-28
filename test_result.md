@@ -152,15 +152,18 @@ frontend:
 
   - task: "Theme System German Language and Visibility Fix Testing"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/frontend/src/HospitalApp.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: true
     status_history:
         - working: "NA"
           agent: "testing"
           comment: "Starting comprehensive testing of the fixed theme system with German language support and visibility improvements. Testing focus: German language implementation (🎨 Design button, 'Design auswählen' dropdown header, German theme names), Visibility fixes (solid dark dropdown background, readable text), Theme switching functionality (Modern Rainbow, Corporate Blau, Medical Grün), Dark/Light mode integration, Theme persistence across page refreshes, Card and button styling integration with themes, and overall UI consistency across all theme combinations."
+        - working: false
+          agent: "testing"
+          comment: "THEME SYSTEM TESTING COMPLETED - MIXED RESULTS ✅ WORKING PERFECTLY: German language implementation (🎨 Design button, 'Design auswählen' dropdown header, all theme names in German), Dropdown visibility (solid dark background bg-gray-900/95, fully readable text), Dark/Light mode toggle (🌙 Dark ↔ ☀️ Light working), Theme selection (localStorage correctly updated: modern → corporate → medical), Cards and buttons use proper theme styling with gradients. ❌ CRITICAL ISSUE FOUND: Theme background switching NOT working - main container only shows 'min-h-screen' class, missing gradient background classes. Manual testing proves Tailwind classes work perfectly (Modern Rainbow: purple/pink gradient, Corporate Blau: blue gradient, Medical Grün: green gradient), but React component's getCurrentThemeStyles().background returns empty values. ROOT CAUSE: Bug in React state management or getCurrentThemeStyles() function - theme selection works but CSS class generation fails. Theme persistence also fails due to same issue."
 
 metadata:
   created_by: "main_agent"
