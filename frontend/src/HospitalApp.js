@@ -1626,20 +1626,30 @@ const UltraModernHospitalApp = () => {
                 {/* THEME CONTROLS - Mobile */}
                 <div className="mb-4 p-3 rounded-xl border border-white/20">
                   <h4 className={`font-bold mb-2 text-sm ${getCurrentThemeStyles().text}`}>🎨 Design & Modus</h4>
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => setShowThemeSelector(!showThemeSelector)}
-                      className={`flex-1 bg-gradient-to-r ${getCurrentThemeStyles().button.secondary} text-white px-3 py-2 rounded-lg font-bold text-xs`}
+                  
+                  {/* Theme Selection */}
+                  <div className="mb-3">
+                    <label className={`block text-xs font-bold mb-1 ${getCurrentThemeStyles().textSecondary}`}>Aktuelles Design:</label>
+                    <select
+                      value={currentTheme}
+                      onChange={(e) => setCurrentTheme(e.target.value)}
+                      className="w-full bg-gray-800/90 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm"
                     >
-                      🎨 Tema
-                    </button>
-                    <button
-                      onClick={() => setIsDarkMode(!isDarkMode)}
-                      className={`flex-1 bg-gradient-to-r ${isDarkMode ? 'from-yellow-500 to-orange-500' : 'from-indigo-500 to-purple-500'} text-white px-3 py-2 rounded-lg font-bold text-xs`}
-                    >
-                      {isDarkMode ? '☀️' : '🌙'}
-                    </button>
+                      {Object.entries(themes).map(([key, theme]) => (
+                        <option key={key} value={key} className="bg-gray-800">
+                          {theme.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
+                  
+                  {/* Dark Mode Toggle */}
+                  <button
+                    onClick={() => setIsDarkMode(!isDarkMode)}
+                    className={`w-full bg-gradient-to-r ${isDarkMode ? 'from-yellow-500 to-orange-500' : 'from-indigo-500 to-purple-500'} text-white px-3 py-2 rounded-lg font-bold text-sm`}
+                  >
+                    {isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+                  </button>
                 </div>
 
                 {/* PRIMARY STOCK ACTIONS */}
