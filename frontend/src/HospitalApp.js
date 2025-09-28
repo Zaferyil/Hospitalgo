@@ -1530,6 +1530,76 @@ const UltraModernHospitalApp = () => {
         </div>
       </nav>
 
+      {/* 🏢 PROFESSIONAL ACTION TOOLBAR */}
+      <div className="sticky top-16 md:top-20 z-30 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-lg">
+        <div className="max-w-7xl mx-auto px-3 md:px-4 lg:px-8 py-3 md:py-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            
+            {/* PRIMARY ACTIONS */}
+            <div className="flex flex-wrap items-center gap-2 md:gap-3">
+              <button
+                onClick={() => {
+                  setTransactionType('neue_bestellung');
+                  setShowAddForm(true);
+                }}
+                className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-4 md:px-5 py-2.5 md:py-3 rounded-xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm"
+                data-testid="action-new-order-button"
+              >
+                <Plus className="h-4 w-4" />
+                <span>🛒 Neue Bestellung</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setTransactionType('stok_eingang');
+                  setShowAddForm(true);
+                }}
+                className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-4 md:px-5 py-2.5 md:py-3 rounded-xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm"
+                data-testid="action-stock-entry-button"
+              >
+                <Package className="h-4 w-4" />
+                <span>📦 Lagereingang</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setTransactionType('stok_ausgang');
+                  setShowAddForm(true);
+                }}
+                className="bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 text-white px-4 md:px-5 py-2.5 md:py-3 rounded-xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm"
+                data-testid="action-stock-exit-button"
+              >
+                <Minus className="h-4 w-4" />
+                <span>📤 Lagerausgang</span>
+              </button>
+            </div>
+
+            {/* SECONDARY ACTIONS */}
+            <div className="flex items-center gap-2 md:gap-3">
+              <button
+                onClick={exportToExcel}
+                className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white px-3 md:px-4 py-2.5 md:py-3 rounded-xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-xs md:text-sm"
+                data-testid="action-export-excel-button"
+              >
+                <Download className="h-4 w-4" />
+                <span className="hidden sm:inline">📊 Excel</span>
+                <span className="sm:hidden">📊</span>
+              </button>
+
+              <button
+                onClick={() => exportToPDF()}
+                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-3 md:px-4 py-2.5 md:py-3 rounded-xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-xs md:text-sm"
+                data-testid="action-export-pdf-button"
+              >
+                <FileText className="h-4 w-4" />
+                <span className="hidden sm:inline">📄 PDF</span>
+                <span className="sm:hidden">📄</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-3 md:px-4 lg:px-8 py-4 md:py-8 relative z-10">
         {/* Dashboard Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
