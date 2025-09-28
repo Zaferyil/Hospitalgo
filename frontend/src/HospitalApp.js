@@ -728,6 +728,91 @@ const UltraModernHospitalApp = () => {
   const [showReports, setShowReports] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
+  // 🤖 INTELLIGENT STOCK MANAGEMENT SYSTEM - German
+  const [showStockMergeDialog, setShowStockMergeDialog] = useState(false);
+  const [existingProduct, setExistingProduct] = useState(null);
+  const [duplicateProductWarning, setDuplicateProductWarning] = useState('');
+
+  // 📋 Prüfe ob Produkt bereits existiert
+  const checkExistingProduct = (produktName) => {
+    if (!produktName || produktName.trim() === '') {
+      setDuplicateProductWarning('');
+      setExistingProduct(null);
+      return;
+    }
+
+    const existing = orders.find(order => 
+      order.produktName.toLowerCase().trim() === produktName.toLowerCase().trim()
+    );
+
+    if (existing && !editingOrder) {
+      setExistingProduct(existing);
+      setDuplicateProductWarning(
+        `⚠️ Produkt "${produktName}" bereits vorhanden! Aktueller Bestand: ${existing.aktuellerBestand} ${existing.einheit || 'Stück'}`
+      );
+    } else {
+      setDuplicateProductWarning('');
+      setExistingProduct(null);
+    }
+  };
+
+  // 🔗 Bestehende Bestände zusammenführen
+  const mergeWithExistingStock = () => {
+    if (!existingProduct) return;
+
+    const neueGesamtmenge = existingProduct.aktuellerBestand + (parseInt(newOrder.menge) || 0);
+    
+    // Update existing order with new stock
+    setOrders(orders.map(order =>
+      order.id === existingProduct.id
+        ? {
+          ...order,
+          menge: existingProduct.menge + (parseInt(newOrder.menge) || 0),
+          aktuellerBestand: neueGesamtmenge,
+          erhalteneBestellungen: existingProduct.erhalteneBestellungen + (parseInt(newOrder.menge) || 0),
+          bestelldatum: new Date().toISOString().split('T')[0] // Update to today
+        }
+        : order
+    ));
+
+    // Reset form
+    setNewOrder({
+      id: 0,
+      produktName: '',
+      kategorie: '',
+      menge: 0,
+      einheit: '',
+      lieferant: '',
+      bestelldatum: new Date().toISOString().split('T')[0],
+      lieferdatum: '',
+      status: 'Bestellt',
+      notizen: '',
+      mindestBestand: 0,
+      maxBestand: 100,
+      prioritaet: 'Normal',
+      aktuellerBestand: 0,
+      verteilteAnzahl: 0,
+      verteilungseinheit: 'Stück',
+      bestandseinheit: 'Stück',
+      anfangsBestand: 0,
+      erhalteneBestellungen: 0,
+      sku: '',
+      teslimatSuresi: 0,
+      alternatifTedarikci: '',
+      sonKullanmaTarihi: '',
+      lagerStatus: 'normal',
+      otomatikSiparisOneri: 0,
+      budgetKodu: ''
+    });
+
+    setShowAddForm(false);
+    setDuplicateProductWarning('');
+    setExistingProduct(null);
+    
+    // Zeige Erfolgsbenachrichtigung
+    alert(`✅ Bestand erfolgreich aktualisiert!\n${existingProduct.produktName}: ${neueGesamtmenge} ${existingProduct.einheit || 'Stück'}`);
+  };
+
   const kategorien = ['Getränke', 'Hygieneartikel', 'Medizinische Verbrauchsmaterialien', 'Reinigungsmittel', 'Büromaterial', 'Lebensmittel'];
   const statusOptions = ['Bestellt', 'Geliefert', 'Storniert', 'Ausstehend'];
   const prioritaetOptions = ['Kritisch', 'Hoch', 'Normal', 'Niedrig'];
