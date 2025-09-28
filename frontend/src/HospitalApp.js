@@ -2026,8 +2026,6 @@ const UltraModernHospitalApp = () => {
                       bestandseinheit: 'Stück',
                       anfangsBestand: 0,
                       erhalteneBestellungen: 0,
-                      birimFiyat: 0,
-                      toplamTutar: 0,
                       sku: '',
                       teslimatSuresi: 0,
                       alternatifTedarikci: '',
