@@ -1732,33 +1732,48 @@ const UltraModernHospitalApp = () => {
                   <div className="flex items-center space-x-3">
                     <div className="text-2xl">🤖</div>
                     <div>
-                      <h4 className="text-yellow-300 font-bold">Akıllı Sipariş Önerisi</h4>
+                      <h4 className="text-yellow-300 font-bold">Intelligente Bestellempfehlung</h4>
                       <p className="text-white/80 text-sm">
-                        Mevcut stok seviyesi düşük! Önerilen sipariş miktarı: <strong className="text-yellow-300">{newOrder.otomatikSiparisOneri} {newOrder.einheit}</strong>
+                        Aktueller Lagerbestand niedrig! Empfohlene Bestellmenge: <strong className="text-yellow-300">{newOrder.otomatikSiparisOneri} {newOrder.einheit}</strong>
                       </p>
                       <button
                         onClick={() => setNewOrder({...newOrder, menge: newOrder.otomatikSiparisOneri})}
                         className="mt-2 px-3 py-1 bg-yellow-500/20 border border-yellow-500/50 rounded-lg text-yellow-300 text-sm hover:bg-yellow-500/30 transition-all"
                       >
-                        ✅ Önerilen miktarı kullan
+                        ✅ Empfohlene Menge übernehmen
                       </button>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* LIVE COST SUMMARY */}
-              {newOrder.toplamTutar > 0 && (
-                <div className="mb-6 p-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-xl">
+              {/* EXISTING PRODUCT WARNING */}
+              {duplicateProductWarning && (
+                <div className="mb-6 p-4 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 rounded-xl">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-green-300 font-bold">Toplam Sipariş Tutarı</h4>
-                      <p className="text-white/80 text-sm">
-                        {newOrder.menge} × {newOrder.birimFiyat}€ = <strong className="text-green-300">{newOrder.toplamTutar.toFixed(2)}€</strong>
-                      </p>
+                    <div className="flex items-center space-x-3">
+                      <div className="text-2xl">🔍</div>
+                      <div>
+                        <h4 className="text-blue-300 font-bold">Produkt bereits vorhanden!</h4>
+                        <p className="text-white/80 text-sm">{duplicateProductWarning}</p>
+                      </div>
                     </div>
-                    <div className="text-3xl font-black text-green-300">
-                      {newOrder.toplamTutar.toFixed(2)}€
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={mergeWithExistingStock}
+                        className="px-4 py-2 bg-green-500/20 border border-green-500/50 rounded-lg text-green-300 text-sm hover:bg-green-500/30 transition-all"
+                      >
+                        🔗 Bestand zusammenführen
+                      </button>
+                      <button
+                        onClick={() => {
+                          setDuplicateProductWarning('');
+                          setExistingProduct(null);
+                        }}
+                        className="px-4 py-2 bg-gray-500/20 border border-gray-500/50 rounded-lg text-gray-300 text-sm hover:bg-gray-500/30 transition-all"
+                      >
+                        ➕ Separat hinzufügen
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1770,7 +1785,11 @@ const UltraModernHospitalApp = () => {
                   <input
                     type="text"
                     value={newOrder.produktName}
-                    onChange={(e) => setNewOrder({...newOrder, produktName: e.target.value})}
+                    onChange={(e) => {
+                      setNewOrder({...newOrder, produktName: e.target.value});
+                      // Check for existing product in real-time
+                      setTimeout(() => checkExistingProduct(e.target.value), 500);
+                    }}
                     className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
                     placeholder="z.B. Mineralwasser 1,5L"
                     data-testid="product-name-input"
@@ -1812,18 +1831,6 @@ const UltraModernHospitalApp = () => {
                     className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-green-500/50 focus:border-green-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
                     placeholder="0"
                     data-testid="quantity-input"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-white/80 text-sm font-bold mb-2">Birim Fiyat (€) *</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    value={newOrder.birimFiyat}
-                    onChange={(e) => setNewOrder({...newOrder, birimFiyat: parseFloat(e.target.value) || 0})}
-                    className="w-full px-3 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-yellow-500/50 focus:border-yellow-400 transition-all duration-300 text-white placeholder-white/60 text-sm md:text-base"
-                    placeholder="0.00"
                   />
                 </div>
 
