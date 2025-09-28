@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Download, FileText, Trash2, Edit, Package, Calendar, TrendingUp, AlertTriangle, CheckCircle, Clock, Filter, Menu, Bell, Settings, Eye, BarChart3, Zap, Star, Sparkles } from 'lucide-react';
+import { Plus, Search, Download, FileText, Trash2, Edit, Package, Calendar, TrendingUp, AlertTriangle, CheckCircle, Clock, Filter, Menu, Bell, Settings, Eye, BarChart3, Zap, Star, Sparkles, Minus } from 'lucide-react';
 import PWAInstaller from './PWAInstaller';
 
 const ReportsPage = ({ orders, onBack }) => {
