@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Remove the 'Made with Emergent' logo from the bottom right corner of the main screen"
+user_problem_statement: "Test the new professional 'Neue Bestellung' (New Order) form with enhanced features including smart calculations, inventory status, smart suggestions, enhanced fields, and real-time feedback"
 
 frontend:
   - task: "Remove Made with Emergent logo"
@@ -110,7 +110,7 @@ frontend:
     working: true
     file: "/app/frontend/public/index.html (PostHog script removed)"
     stuck_count: 0
-    priority: "high"
+    priority: "low"
     needs_retesting: false
     status_history:
         - working: "NA"
@@ -123,14 +123,27 @@ frontend:
           agent: "testing"
           comment: "COMPREHENSIVE TESTING COMPLETED: ✅ Logo removal verification successful - NO 'Made with Emergent' branding found anywhere in the application (searched entire DOM, bottom-right corner, and all text content). ✅ Application loads properly without loading screen issues. ✅ All core functionality working: Reports page, Add Order modal, search/filter, view toggle (cards/table), Excel/PDF export, mobile responsiveness. ✅ PostHog removal successful - only minor network request failures to PostHog endpoints (expected behavior). ✅ No console errors or critical issues found. Task is fully complete and working perfectly."
 
+  - task: "Professional Order Form Testing"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/HospitalApp.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "testing"
+          comment: "Starting comprehensive testing of the new professional 'Neue Bestellung' form with enhanced features: smart calculations, inventory status, smart suggestions, enhanced fields (SKU, unit price, budget code, supplier info), and real-time feedback displays."
+
 metadata:
   created_by: "main_agent"
-  version: "1.0"
-  test_sequence: 1
+  version: "1.1"
+  test_sequence: 2
   run_ui: true
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Professional Order Form Testing"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -140,3 +153,5 @@ agent_communication:
       message: "Logo removal completed by disabling PostHog analytics script. App now loads properly. Need frontend testing to confirm logo is completely removed and app functions correctly."
     - agent: "testing"
       message: "TESTING COMPLETE ✅ Logo removal verification successful! Conducted comprehensive testing across desktop and mobile views. NO 'Made with Emergent' branding found anywhere in the application. All core hospital management features working perfectly: navigation, reports page, add orders, search/filter, export functions, and mobile responsiveness. PostHog removal was successful with no critical errors. The application loads cleanly without the previous loading screen issues. Task is fully complete and ready for user verification."
+    - agent: "testing"
+      message: "Starting comprehensive testing of the new professional order form with enhanced features including smart calculations, inventory status warnings, smart suggestions, and real-time feedback systems."
