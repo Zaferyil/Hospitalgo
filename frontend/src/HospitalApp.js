@@ -1435,7 +1435,7 @@ const UltraModernHospitalApp = () => {
               </button>
 
               <button
-                onClick={exportToPDF}
+                onClick={() => exportToPDF()}
                 className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base"
                 data-testid="export-pdf-button"
               >
@@ -1444,14 +1444,44 @@ const UltraModernHospitalApp = () => {
                 <span className="md:hidden">📄</span>
               </button>
 
+              {/* PROFESSIONAL STOCK MANAGEMENT BUTTONS */}
               <button
-                onClick={() => setShowAddForm(true)}
+                onClick={() => {
+                  setTransactionType('neue_bestellung');
+                  setShowAddForm(true);
+                }}
                 className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base"
-                data-testid="add-order-button"
+                data-testid="new-order-button"
               >
                 <Plus className="h-4 md:h-5 w-4 md:w-5" />
-                <span className="hidden md:inline">➕ Neue Bestellung</span>
-                <span className="md:hidden">➕</span>
+                <span className="hidden md:inline">🛒 Neue Bestellung</span>
+                <span className="md:hidden">🛒</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setTransactionType('stok_eingang');
+                  setShowAddForm(true);
+                }}
+                className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base"
+                data-testid="stock-entry-button"
+              >
+                <Package className="h-4 md:h-5 w-4 md:w-5" />
+                <span className="hidden md:inline">📦 Lagereingang</span>
+                <span className="md:hidden">📦</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setTransactionType('stok_ausgang');
+                  setShowAddForm(true);
+                }}
+                className="bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl flex items-center space-x-2 font-bold transition-all duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base"
+                data-testid="stock-exit-button"
+              >
+                <Minus className="h-4 md:h-5 w-4 md:w-5" />
+                <span className="hidden md:inline">📤 Lagerausgang</span>
+                <span className="md:hidden">📤</span>
               </button>
             </div>
 
