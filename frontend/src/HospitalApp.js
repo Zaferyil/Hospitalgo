@@ -1608,7 +1608,7 @@ const UltraModernHospitalApp = () => {
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="lg:hidden">
+            <div className="md:hidden">
               <button
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
                 className="p-2 bg-white/10 backdrop-blur-sm rounded-xl text-white hover:bg-white/20 transition-all duration-300"
