@@ -839,10 +839,10 @@ const UltraModernHospitalApp = () => {
 
   // 🧮 SIMPLIFIED CALCULATION ENGINE - Fixed Logic
   useEffect(() => {
-    const anfangsBestand = parseInt(newOrder.anfangsBestand.toString()) || 0;
-    const neueBestellung = parseInt(newOrder.menge.toString()) || 0;
-    const verteilteAnzahl = parseInt(newOrder.verteilteAnzahl.toString()) || 0;
-    const mindestBestand = parseInt(newOrder.mindestBestand.toString()) || 0;
+    const anfangsBestand = parseInt((newOrder.anfangsBestand || 0).toString()) || 0;
+    const neueBestellung = parseInt((newOrder.menge || 0).toString()) || 0;
+    const verteilteAnzahl = parseInt((newOrder.verteilteAnzahl || 0).toString()) || 0;
+    const mindestBestand = parseInt((newOrder.mindestBestand || 0).toString()) || 0;
 
     // 📦 KORREKTE BESTANDSBERECHNUNG
     let berechneterBestand;
