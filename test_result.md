@@ -167,11 +167,11 @@ frontend:
 
   - task: "Mobile Duplicate Button Fix Testing"
     implemented: true
-    working: false
+    working: "NA"
     file: "/app/frontend/src/HospitalApp.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: "NA"
           agent: "testing"
@@ -179,6 +179,9 @@ frontend:
         - working: false
           agent: "testing"
           comment: "MOBILE DUPLICATE BUTTON FIX TESTING COMPLETED - CRITICAL ISSUES FOUND ✅ WORKING FEATURES: Action Bar properly hidden on mobile (hidden md:block class working), Hamburger menu access working, Mobile theme controls working (🎨 Design & Modus section with dropdown + dark mode toggle), Theme functionality working (theme selection and dark mode toggle functional), Desktop vs mobile comparison working (action bar visible on desktop, hidden on mobile). ❌ CRITICAL FAILURES - DUPLICATE BUTTONS STILL PRESENT: Found 2 Neue Bestellung buttons (expected 1), Found 2 Lagereingang buttons (expected 1), Found 2 Lagerausgang buttons (expected 1), Found 2 Excel Export buttons (expected 1), Found 2 PDF Export buttons (expected 1), Found 2 Reports buttons (expected 1). ROOT CAUSE: The mobile menu still contains duplicate buttons despite the action bar being hidden. The fix is incomplete - buttons are appearing both in the mobile menu AND somewhere else in the mobile view. REQUIRES MAIN AGENT FIX: Remove duplicate button instances from mobile view to ensure only single set of buttons in mobile menu."
+        - working: "NA"
+          agent: "main"  
+          comment: "RESPONSIVE BREAKPOINT FIX APPLIED: Fixed the root cause of duplicate buttons - the mobile menu was showing on 'lg:hidden' (below 1024px) while action toolbar shows on 'md:block' (768px+), creating overlap between 768-1023px where both were visible. CHANGES MADE: 1) Mobile Menu: Changed from 'lg:hidden' to 'md:hidden' (now only shows below 768px), 2) Mobile Menu Button: Changed from 'lg:hidden' to 'md:hidden', 3) Desktop Navigation: Changed from 'hidden lg:flex' to 'hidden md:flex' (now shows from 768px+). This creates clean breakpoints: <768px = Mobile Menu only, 768px+ = Action Toolbar + Desktop Navigation only. Need retesting to verify duplicate buttons are eliminated."
 
 metadata:
   created_by: "main_agent"
