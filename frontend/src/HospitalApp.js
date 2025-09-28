@@ -989,7 +989,9 @@ const UltraModernHospitalApp = () => {
       sku: '',
       lagerStatus: 'normal',
       otomatikSiparisOneri: 0,
-      transactionType: 'neue_bestellung'
+      transactionType: 'neue_bestellung',
+      transactionDate: new Date().toISOString().split('T')[0],
+      transactionHistory: []
     });
     
     setDuplicateProductWarning('');
